@@ -23,7 +23,7 @@ public class TipoUsuarioDTO {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "CD_TIPO_USUARIO")
-	private Long cdTipoPessoa;
+	private Long cdTipoUsuario;
 	
 	@Column(name = "DS_DESCRICAO", nullable = false)
 	private String dsDescricao;

@@ -26,7 +26,7 @@ public class AutorDTO {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "CD_AUTOR")
-	private Integer cdAutor;
+	private Long cdAutor;
 	
 	@Column(name = "NM_NOME", nullable = false)
 	private String nmNome;
