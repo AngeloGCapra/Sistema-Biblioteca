@@ -30,8 +30,7 @@ public class GeneroController {
 	
 	@PostMapping(value = "/inserir")
 	@ResponseStatus(HttpStatus.CREATED)
-	public GeneroDTO inserir(@RequestBody GeneroDTO genero,
-			@RequestHeader(value = "token") String token) {
+	public GeneroDTO inserir(@RequestHeader(value = "token") String token, @RequestBody GeneroDTO genero) {
 		TokenJWT.validarToken(token);	
 		return generoService.salvar(genero);
 	}
@@ -45,8 +44,7 @@ public class GeneroController {
 
 	@GetMapping(value = "/buscarPorCd")
 	@ResponseStatus(HttpStatus.OK)
-	public GeneroDTO buscarPorCd(@RequestHeader(value = "cdGenero") Long cdGenero,
-			@RequestHeader(value = "token") String token) {
+	public GeneroDTO buscarPorCd(@RequestHeader(value = "token") String token, @RequestHeader(value = "cdGenero") Long cdGenero) {
 		TokenJWT.validarToken(token);
 		return generoService.buscaPorCd(cdGenero)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, 
@@ -55,8 +53,7 @@ public class GeneroController {
 	
 	@DeleteMapping(value = "/delete")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void remover(@RequestHeader (value = "cdGenero") Long cdGenero,
-			@RequestHeader(value = "token") String token) {
+	public void remover(@RequestHeader(value = "token") String token, @RequestHeader (value = "cdGenero") Long cdGenero) {
 		TokenJWT.validarToken(token);
 		generoService.buscaPorCd(cdGenero)
 			.map(genero -> {
@@ -75,8 +72,7 @@ public class GeneroController {
 	 */
 	@PutMapping(value = "/editar")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void atualizar(@RequestBody GeneroDTO genero, 
-			@RequestHeader(value = "token") String token) {
+	public void atualizar(@RequestHeader(value = "token") String token, @RequestBody GeneroDTO genero) {
 		TokenJWT.validarToken(token);
 		generoService.buscaPorCd(genero.getCdGenero()).map(generoBase -> {
 			modelMapper.map(genero, generoBase);

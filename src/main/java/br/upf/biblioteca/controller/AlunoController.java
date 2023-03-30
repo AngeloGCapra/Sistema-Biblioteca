@@ -1,5 +1,6 @@
 package br.upf.biblioteca.controller;
 
+import java.text.DecimalFormat;
 import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ import br.upf.biblioteca.service.AlunoService;
 
 @RestController
 @RequestMapping(value = "/aluno")
-public class AlunoController {
+public class AlunoController { 
 
 	@Autowired
 	private AlunoService alunoService;
@@ -28,11 +29,13 @@ public class AlunoController {
 	@Autowired
 	private ModelMapper modelMapper;
 	
+	private DecimalFormat formato = new DecimalFormat("#.##");  
+	
 	@PostMapping(value = "/inserir")
 	@ResponseStatus(HttpStatus.CREATED)
-	public AlunoDTO inserir(@RequestBody AlunoDTO aluno,
-			@RequestHeader(value = "token") String token) {
-		TokenJWT.validarToken(token);	
+	public AlunoDTO inserir(@RequestHeader(value = "token") String token, @RequestBody AlunoDTO aluno) {
+		TokenJWT.validarToken(token);
+		aluno.setNrDevendo(Double.valueOf(formato.format(0)));
 		return alunoService.salvar(aluno);
 	}
 	
@@ -45,8 +48,7 @@ public class AlunoController {
 
 	@GetMapping(value = "/buscarPorCd")
 	@ResponseStatus(HttpStatus.OK)
-	public AlunoDTO buscarPorCd(@RequestHeader(value = "cdAluno") Long cdAluno,
-			@RequestHeader(value = "token") String token) {
+	public AlunoDTO buscarPorCd(@RequestHeader(value = "token") String token, @RequestHeader(value = "cdAluno") Long cdAluno) {
 		TokenJWT.validarToken(token);
 		return alunoService.buscaPorCd(cdAluno)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, 
@@ -55,8 +57,7 @@ public class AlunoController {
 	
 	@DeleteMapping(value = "/delete")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void remover(@RequestHeader (value = "cdAluno") Long cdAluno,
-			@RequestHeader(value = "token") String token) {
+	public void remover(@RequestHeader(value = "token") String token, @RequestHeader (value = "cdAluno") Long cdAluno) {
 		TokenJWT.validarToken(token);
 		alunoService.buscaPorCd(cdAluno)
 			.map(aluno -> {
@@ -75,8 +76,7 @@ public class AlunoController {
 	 */
 	@PutMapping(value = "/editar")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void atualizar(@RequestBody AlunoDTO aluno, 
-			@RequestHeader(value = "token") String token) {
+	public void atualizar(@RequestHeader(value = "token") String token, @RequestBody AlunoDTO aluno) {
 		TokenJWT.validarToken(token);
 		alunoService.buscaPorCd(aluno.getCdAluno()).map(alunoBase -> {
 			modelMapper.map(aluno, alunoBase);

@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import br.upf.biblioteca.utils.Util;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -31,8 +33,9 @@ public class AutorDTO {
 	@Column(name = "NM_NOME", nullable = false)
 	private String nmNome;
 	
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.DATE)
 	@Column(name = "DT_NASCIMENTO", nullable = false)
+	@JsonFormat(pattern = Util.FORMATO_RETORNO_DATA)
 	private Date dtNascimento;
 	
 }

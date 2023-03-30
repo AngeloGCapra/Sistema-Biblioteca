@@ -23,8 +23,6 @@ import br.upf.biblioteca.service.UsuarioService;
 @RestController
 @RequestMapping(value = "/usuario")
 public class UsuarioController {
-	
-	private static final Logger logger = LogManager.getLogger(UsuarioDTO.class);
 
 	@Autowired
 	private UsuarioService usuarioService;
@@ -32,10 +30,11 @@ public class UsuarioController {
 	@Autowired
 	private ModelMapper modelMapper;
 	
+	private static final Logger logger = LogManager.getLogger(UsuarioDTO.class);
+	
 	@PostMapping(value = "/inserir")
 	@ResponseStatus(HttpStatus.CREATED)
-	public UsuarioDTO inserir(@RequestBody UsuarioDTO usuario,
-			@RequestHeader(value = "token") String token) {
+	public UsuarioDTO inserir(@RequestHeader(value = "token") String token, @RequestBody UsuarioDTO usuario) {
 		TokenJWT.validarToken(token);	
 		return usuarioService.salvar(usuario);
 	}
@@ -49,25 +48,23 @@ public class UsuarioController {
 
 	@GetMapping(value = "/buscarPorCd")
 	@ResponseStatus(HttpStatus.OK)
-	public UsuarioDTO buscarPorCd(@RequestHeader(value = "cdUsuario") Long cdUsuario,
-			@RequestHeader(value = "token") String token) {
+	public UsuarioDTO buscarPorCd(@RequestHeader(value = "token") String token, @RequestHeader(value = "cdUsuario") Long cdUsuario) {
 		TokenJWT.validarToken(token);
 		return usuarioService.buscaPorCd(cdUsuario)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, 
-						"Usuario não encontrado!"));
+						"Usuário não encontrado!"));
 	}
 	
 	@DeleteMapping(value = "/delete")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void remover(@RequestHeader (value = "cdUsuario") Long cdUsuario,
-			@RequestHeader(value = "token") String token) {
+	public void remover(@RequestHeader(value = "token") String token, @RequestHeader (value = "cdUsuario") Long cdUsuario) {
 		TokenJWT.validarToken(token);
 		usuarioService.buscaPorCd(cdUsuario)
 			.map(usuario -> {
 				usuarioService.removerPorCd(usuario.getCdUsuario());
 				return Void.TYPE;
 			}).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
-					"Usuario não encontrado!"));
+					"Usuário não encontrado!"));
 	}
 	
 	/**
@@ -79,21 +76,19 @@ public class UsuarioController {
 	 */
 	@PutMapping(value = "/editar")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void atualizar(@RequestBody UsuarioDTO usuario, 
-			@RequestHeader(value = "token") String token) {
+	public void atualizar(@RequestHeader(value = "token") String token, @RequestBody UsuarioDTO usuario) {
 		TokenJWT.validarToken(token);
 		usuarioService.buscaPorCd(usuario.getCdUsuario()).map(usuarioBase -> {
 			modelMapper.map(usuario, usuarioBase);
 			usuarioService.salvar(usuarioBase);
 			return Void.TYPE;
 		}).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
-				"Usuario não encontrado!"));
+				"Usuário não encontrado!"));
 	}
 	
 	@PostMapping(value = "/login")
 	@ResponseStatus(HttpStatus.OK)
-	public UsuarioDTO autorizar(@RequestHeader(value = "dsLogin") String dsLogin,
-			@RequestHeader(value = "dsSenha") String dsSenha) {
+	public UsuarioDTO autorizar(@RequestHeader(value = "dsLogin") String dsLogin, @RequestHeader(value = "dsSenha") String dsSenha) {
 		UsuarioDTO usuario;
 		
 		if(dsLogin != null && !dsLogin.isEmpty() && dsSenha != null && !dsSenha.isEmpty()) {

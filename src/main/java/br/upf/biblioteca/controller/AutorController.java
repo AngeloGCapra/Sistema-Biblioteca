@@ -30,8 +30,7 @@ public class AutorController {
 	
 	@PostMapping(value = "/inserir")
 	@ResponseStatus(HttpStatus.CREATED)
-	public AutorDTO inserir(@RequestBody AutorDTO autor,
-			@RequestHeader(value = "token") String token) {
+	public AutorDTO inserir(@RequestHeader(value = "token") String token, @RequestBody AutorDTO autor) {
 		TokenJWT.validarToken(token);	
 		return autorService.salvar(autor);
 	}
@@ -55,8 +54,7 @@ public class AutorController {
 	
 	@DeleteMapping(value = "/delete")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void remover(@RequestHeader (value = "cdAutor") Long cdAutor,
-			@RequestHeader(value = "token") String token) {
+	public void remover(@RequestHeader(value = "token") String token, @RequestHeader (value = "cdAutor") Long cdAutor) {
 		TokenJWT.validarToken(token);
 		autorService.buscaPorCd(cdAutor)
 			.map(autor -> {
@@ -75,8 +73,7 @@ public class AutorController {
 	 */
 	@PutMapping(value = "/editar")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void atualizar(@RequestBody AutorDTO autor, 
-			@RequestHeader(value = "token") String token) {
+	public void atualizar(@RequestHeader(value = "token") String token, @RequestBody AutorDTO autor) {
 		TokenJWT.validarToken(token);
 		autorService.buscaPorCd(autor.getCdAutor()).map(autorBase -> {
 			modelMapper.map(autor, autorBase);

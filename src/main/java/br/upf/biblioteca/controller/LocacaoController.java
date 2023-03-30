@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import br.upf.biblioteca.dto.LocacaoDTO;
+import br.upf.biblioteca.dto.UsuarioDTO;
 import br.upf.biblioteca.login.TokenJWT;
 import br.upf.biblioteca.service.LocacaoService;
+import br.upf.biblioteca.utils.Util;
 
 @RestController
 @RequestMapping(value = "/locacao")
@@ -30,9 +32,16 @@ public class LocacaoController {
 	
 	@PostMapping(value = "/inserir")
 	@ResponseStatus(HttpStatus.CREATED)
-	public LocacaoDTO inserir(@RequestBody LocacaoDTO locacao,
-			@RequestHeader(value = "token") String token) {
-		TokenJWT.validarToken(token);	
+	public LocacaoDTO inserir(@RequestHeader(value = "token") String token, @RequestBody LocacaoDTO locacao) {
+		TokenJWT.validarToken(token);
+		
+		UsuarioDTO usuarioDTO = new UsuarioDTO();
+		usuarioDTO.setCdUsuario(Long.parseLong(TokenJWT.recuperarClaim(token, "cdUsuario")));
+		
+		locacao.setDtlocacao(Util.buscarDataAtual());
+		locacao.setDtDevolucao(Util.buscarDataAPartirDataAtual(15).getTime());
+		locacao.setSnStatus("ALOCADO");
+		locacao.setUsuario(usuarioDTO);
 		return locacaoService.salvar(locacao);
 	}
 	
@@ -45,25 +54,23 @@ public class LocacaoController {
 
 	@GetMapping(value = "/buscarPorCd")
 	@ResponseStatus(HttpStatus.OK)
-	public LocacaoDTO buscarPorCd(@RequestHeader(value = "cdLocacao") Long cdLocacao,
-			@RequestHeader(value = "token") String token) {
+	public LocacaoDTO buscarPorCd(@RequestHeader(value = "token") String token, @RequestHeader(value = "cdLocacao") Long cdLocacao) {
 		TokenJWT.validarToken(token);
 		return locacaoService.buscaPorCd(cdLocacao)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, 
-						"Locacao não encontrada!"));
+						"Locacão não encontrada!"));
 	}
 	
 	@DeleteMapping(value = "/delete")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void remover(@RequestHeader (value = "cdLocacao") Long cdLocacao,
-			@RequestHeader(value = "token") String token) {
+	public void remover(@RequestHeader(value = "token") String token, @RequestHeader (value = "cdLocacao") Long cdLocacao) {
 		TokenJWT.validarToken(token);
 		locacaoService.buscaPorCd(cdLocacao)
 			.map(locacao -> {
 				locacaoService.removerPorCd(locacao.getCdLocacao());
 				return Void.TYPE;
 			}).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
-					"Locacao não encontrada!"));
+					"Locacão não encontrada!"));
 	}
 	
 	/**
@@ -75,15 +82,19 @@ public class LocacaoController {
 	 */
 	@PutMapping(value = "/editar")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void atualizar(@RequestBody LocacaoDTO locacao, 
-			@RequestHeader(value = "token") String token) {
+	public void atualizar(@RequestHeader(value = "token") String token, @RequestBody LocacaoDTO locacao) {
 		TokenJWT.validarToken(token);
+		
+		UsuarioDTO usuarioDTO = new UsuarioDTO();
+		usuarioDTO.setCdUsuario(Long.parseLong(TokenJWT.recuperarClaim(token, "cdUsuario")));
+		
 		locacaoService.buscaPorCd(locacao.getCdLocacao()).map(locacaoBase -> {
+			locacao.setUsuario(usuarioDTO);
 			modelMapper.map(locacao, locacaoBase);
 			locacaoService.salvar(locacaoBase);
 			return Void.TYPE;
 		}).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
-				"Locacao não encontrada!"));
+				"Locacão não encontrada!"));
 	}
 	
 }

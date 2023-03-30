@@ -30,7 +30,11 @@ public class LocacaoDTO {
 	@Column(name = "CD_LOCACAO")
 	private Long cdLocacao;
 	
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.DATE)
+	@Column(name = "DT_LOCACAO", nullable = false)
+	private Date dtlocacao;
+	
+	@Temporal(TemporalType.DATE)
 	@Column(name = "DT_DEVOLUCAO", nullable = false)
 	private Date dtDevolucao;
 	

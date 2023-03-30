@@ -30,8 +30,7 @@ public class TipoUsuarioController {
 	
 	@PostMapping(value = "/inserir")
 	@ResponseStatus(HttpStatus.CREATED)
-	public TipoUsuarioDTO inserir(@RequestBody TipoUsuarioDTO tipoUsuario,
-			@RequestHeader(value = "token") String token) {
+	public TipoUsuarioDTO inserir(@RequestHeader(value = "token") String token, @RequestBody TipoUsuarioDTO tipoUsuario) {
 		TokenJWT.validarToken(token);	
 		return tipoUsuarioService.salvar(tipoUsuario);
 	}
@@ -45,8 +44,7 @@ public class TipoUsuarioController {
 
 	@GetMapping(value = "/buscarPorCd")
 	@ResponseStatus(HttpStatus.OK)
-	public TipoUsuarioDTO buscarPorCd(@RequestHeader(value = "cdTipoUsuario") Long cdTipoUsuario,
-			@RequestHeader(value = "token") String token) {
+	public TipoUsuarioDTO buscarPorCd(@RequestHeader(value = "token") String token, @RequestHeader(value = "cdTipoUsuario") Long cdTipoUsuario) {
 		TokenJWT.validarToken(token);
 		return tipoUsuarioService.buscaPorCd(cdTipoUsuario)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, 
@@ -55,8 +53,7 @@ public class TipoUsuarioController {
 	
 	@DeleteMapping(value = "/delete")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void remover(@RequestHeader (value = "cdTipoUsuario") Long cdTipoUsuario,
-			@RequestHeader(value = "token") String token) {
+	public void remover(@RequestHeader(value = "token") String token, @RequestHeader (value = "cdTipoUsuario") Long cdTipoUsuario) {
 		TokenJWT.validarToken(token);
 		tipoUsuarioService.buscaPorCd(cdTipoUsuario)
 			.map(tipoUsuario -> {
@@ -75,8 +72,7 @@ public class TipoUsuarioController {
 	 */
 	@PutMapping(value = "/editar")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void atualizar(@RequestBody TipoUsuarioDTO tipoUsuario, 
-			@RequestHeader(value = "token") String token) {
+	public void atualizar(@RequestHeader(value = "token") String token, @RequestBody TipoUsuarioDTO tipoUsuario) {
 		TokenJWT.validarToken(token);
 		tipoUsuarioService.buscaPorCd(tipoUsuario.getCdTipoUsuario()).map(tipoUsuarioBase -> {
 			modelMapper.map(tipoUsuario, tipoUsuarioBase);

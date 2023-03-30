@@ -25,11 +25,11 @@ public class AlunoDTO {
 	@Column(name = "CD_ALUNO")
 	private Long cdAluno;
 	
-	@Column(name = "NM_NOME", nullable = false)
+	@Column(name = "NM_NOME", nullable = false, unique = true)
 	private String nmNome;
 	
 	@Column(name = "NR_DEVENDO", nullable = false)
-	private Float nrDevendo;
+	private Double nrDevendo;
 	
 	@Column(name = "DS_CONTATO")
 	private String dsContato;

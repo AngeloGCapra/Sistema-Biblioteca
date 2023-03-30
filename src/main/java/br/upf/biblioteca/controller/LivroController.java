@@ -30,8 +30,7 @@ public class LivroController {
 	
 	@PostMapping(value = "/inserir")
 	@ResponseStatus(HttpStatus.CREATED)
-	public LivroDTO inserir(@RequestBody LivroDTO livro,
-			@RequestHeader(value = "token") String token) {
+	public LivroDTO inserir(@RequestHeader(value = "token") String token, @RequestBody LivroDTO livro) {
 		TokenJWT.validarToken(token);	
 		return livroService.salvar(livro);
 	}
@@ -45,8 +44,7 @@ public class LivroController {
 
 	@GetMapping(value = "/buscarPorCd")
 	@ResponseStatus(HttpStatus.OK)
-	public LivroDTO buscarPorCd(@RequestHeader(value = "cdLivro") Long cdLivro,
-			@RequestHeader(value = "token") String token) {
+	public LivroDTO buscarPorCd(@RequestHeader(value = "token") String token, @RequestHeader(value = "cdLivro") Long cdLivro) {
 		TokenJWT.validarToken(token);
 		return livroService.buscaPorCd(cdLivro)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, 
@@ -55,8 +53,7 @@ public class LivroController {
 	
 	@DeleteMapping(value = "/delete")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void remover(@RequestHeader (value = "cdLivro") Long cdLivro,
-			@RequestHeader(value = "token") String token) {
+	public void remover(@RequestHeader(value = "token") String token, @RequestHeader (value = "cdLivro") Long cdLivro) {
 		TokenJWT.validarToken(token);
 		livroService.buscaPorCd(cdLivro)
 			.map(livro -> {
@@ -75,8 +72,7 @@ public class LivroController {
 	 */
 	@PutMapping(value = "/editar")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void atualizar(@RequestBody LivroDTO livro, 
-			@RequestHeader(value = "token") String token) {
+	public void atualizar(@RequestHeader(value = "token") String token, @RequestBody LivroDTO livro) {
 		TokenJWT.validarToken(token);
 		livroService.buscaPorCd(livro.getCdLivro()).map(livroBase -> {
 			modelMapper.map(livro, livroBase);
