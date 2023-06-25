@@ -61,7 +61,7 @@ class _DashboardState extends State<Dashboard> {
           body: jsonEncode(reqBody)
       );
 
-      var jsonResponse = jsonDecode(response.body);
+      //var jsonResponse = jsonDecode(response.body);
 
       if(response.statusCode == 201){
         _login.clear();
@@ -105,28 +105,25 @@ class _DashboardState extends State<Dashboard> {
     }
   }
 
-  void updateItem(int id) async {
+  void updateItem(int id, TextEditingController loginController, TextEditingController senhaController, TextEditingController nomeController, TextEditingController emailController, TextEditingController tipoUsuarioController) async {
     var tipoUsuario = {
-      "cdTipoUsuario": int.parse(_tipoUsuario.text)
+      "cdTipoUsuario": int.parse(tipoUsuarioController.text),
     };
 
     var requestBody = {
-      "cdUsuario": id, // Adicione o código do usuário ao corpo da solicitação
-      "dsLogin": _login.text,
-      "dsSenha": _senha.text,
-      "nmNome": _nome.text,
-      "dsEmail": _email.text,
-      "tipoUsuario": {
-        "cdTipoUsuario": tipoUsuario
-      },
+      "cdUsuario": id,
+      "dsLogin": loginController.text,
+      "dsSenha": senhaController.text,
+      "nmNome": nomeController.text,
+      "dsEmail": emailController.text,
+      "tipoUsuario": tipoUsuario,
     };
 
-    var response = await http.put(Uri.parse(editarUsuario),
-      headers: {
-        "Content-Type": "application/json",
-        "token": widget.token,
-      },
-      body: jsonEncode(requestBody)
+    var response = await http.put(
+      Uri.parse(editarUsuario),
+      headers: {"Content-Type": "application/json",
+                "token": widget.token},
+        body: jsonEncode(requestBody),
     );
 
     if (response.statusCode == 204) {
@@ -193,9 +190,7 @@ class _DashboardState extends State<Dashboard> {
                            borderOnForeground: false,
                            child: ListTile(
                              leading: GestureDetector(
-                               onTap: () {
-                                 _editItem(context, items![index]); // Chame a função de edição passando os dados do item
-                               },
+                               onTap: () =>_displayTextEditDialog(context, items![index]['cdUsuario'], items![index]),
                                child: Icon(Icons.edit),
                              ),
                              title: Text('${items![index]['dsLogin']}'),
@@ -212,7 +207,7 @@ class _DashboardState extends State<Dashboard> {
          ],
        ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () =>_displayTextInputDialog(context) ,
+        onPressed: () =>_displayTextInputDialog(context),
         child: Icon(Icons.add),
         tooltip: 'Adicionar',
       ),
@@ -287,14 +282,13 @@ class _DashboardState extends State<Dashboard> {
         });
   }
 
-  Future<void> _editItem(BuildContext context, Map<String, dynamic> item) async {
-    TextEditingController loginController = TextEditingController(text: item['dsLogin']);
-    TextEditingController senhaController = TextEditingController(text: item['dsSenha']);
-    TextEditingController nomeController = TextEditingController(text: item['nmNome']);
-    TextEditingController emailController = TextEditingController(text: item['dsEmail']);
-    TextEditingController tipoUsuarioController = TextEditingController(text: item['tipoUsuario']['cdTipoUsuario'].toString());
+  Future<void> _displayTextEditDialog(BuildContext context, int id, Map<String, dynamic> item) async {
+    TextEditingController _loginEdit = TextEditingController(text: item['dsLogin']);
+    TextEditingController _senhaEdit = TextEditingController(text: item['dsSenha']);
+    TextEditingController _nomeEdit = TextEditingController(text: item['nmNome']);
+    TextEditingController _emailEdit = TextEditingController(text: item['dsEmail']);
+    TextEditingController _tipoUsuarioEdit = TextEditingController(text: item['tipoUsuario']['cdTipoUsuario'].toString());
 
-    // Exiba o diálogo de edição com os campos preenchidos
     showDialog(
       context: context,
       builder: (context) {
@@ -304,7 +298,7 @@ class _DashboardState extends State<Dashboard> {
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
-                controller: loginController,
+                controller: _loginEdit,
                 keyboardType: TextInputType.text,
                 decoration: InputDecoration(
                   filled: true,
@@ -316,7 +310,7 @@ class _DashboardState extends State<Dashboard> {
                 ),
               ).p4().px8(),
               TextField(
-                controller: senhaController,
+                controller: _senhaEdit,
                 keyboardType: TextInputType.text,
                 decoration: InputDecoration(
                   filled: true,
@@ -328,7 +322,7 @@ class _DashboardState extends State<Dashboard> {
                 ),
               ).p4().px8(),
               TextField(
-                controller: nomeController,
+                controller: _nomeEdit,
                 keyboardType: TextInputType.text,
                 decoration: InputDecoration(
                   filled: true,
@@ -340,7 +334,7 @@ class _DashboardState extends State<Dashboard> {
                 ),
               ).p4().px8(),
               TextField(
-                controller: emailController,
+                controller: _emailEdit,
                 keyboardType: TextInputType.text,
                 decoration: InputDecoration(
                   filled: true,
@@ -352,7 +346,7 @@ class _DashboardState extends State<Dashboard> {
                 ),
               ).p4().px8(),
               TextField(
-                controller: tipoUsuarioController,
+                controller: _tipoUsuarioEdit,
                 keyboardType: TextInputType.text,
                 decoration: InputDecoration(
                   filled: true,
@@ -365,7 +359,8 @@ class _DashboardState extends State<Dashboard> {
               ).p4().px8(),
               ElevatedButton(
                 onPressed: () {
-                  updateItem(item['cdUsuario']);
+                  updateItem(
+                    id, _loginEdit, _senhaEdit, _nomeEdit, _emailEdit, _tipoUsuarioEdit);
                 },
                 child: Text("Atualizar"),
               ),
