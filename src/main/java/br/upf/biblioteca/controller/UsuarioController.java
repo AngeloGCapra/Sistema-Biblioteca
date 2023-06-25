@@ -34,8 +34,8 @@ public class UsuarioController {
 	
 	@PostMapping(value = "/inserir")
 	@ResponseStatus(HttpStatus.CREATED)
-	public UsuarioDTO inserir(@RequestHeader(value = "token") String token, @RequestBody UsuarioDTO usuario) {
-		TokenJWT.validarToken(token);	
+	public UsuarioDTO inserir(/*@RequestHeader(value = "token") String token, */@RequestBody UsuarioDTO usuario) {
+		//TokenJWT.validarToken(token);	
 		return usuarioService.salvar(usuario);
 	}
 	
@@ -72,7 +72,7 @@ public class UsuarioController {
 	 * na classe BibliotecaApplication.java
 	 * 
 	 * @param usuario
-	 * @param cdUsuario
+	 * @param token
 	 */
 	@PutMapping(value = "/editar")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
