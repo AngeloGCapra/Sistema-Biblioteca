@@ -1,0 +1,212 @@
+body .ui-toolbar {
+    background-color: #4b79a1; 
+    border: #4b79a1;
+}
+
+.geolocalizacaoStyle {
+    display: block !important;
+    margin: auto !important;
+    overflow: hidden !important;
+    font-weight: 500 !important;
+    font-size: 14px !important;
+}
+
+.geolocalizacaoStyle .titulo {
+    font-weight: bold !important;
+}
+
+.photoTopBar {
+    aspect-ratio: 1 / 1;
+    max-height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.layout-wrapper .layout-main .layout-topbar .layout-topbar-menu-wrapper .topbar-menu > li.profile-item {
+    margin-left: 20px !important;
+}
+
+.layout-wrapper .layout-main .layout-topbar .layout-topbar-menu-wrapper .topbar-menu > li.profile-item > form > a {
+    display: inline-block !important;
+    position: relative !important;
+    top: -4px !important;
+}
+
+.layout-wrapper .layout-main .layout-topbar .layout-topbar-menu-wrapper .topbar-menu > li.profile-item > form > a img {
+    width: 40px !important;
+    height: 40px !important;
+    vertical-align: middle !important;
+    margin-top: -4px !important;
+}
+
+.layout-wrapper .layout-main .layout-topbar .layout-topbar-menu-wrapper .topbar-menu > li.profile-item > form > a span {
+    font-weight: bold !important;
+    display: inline-block !important;
+    margin-left: 6px !important;
+    -moz-transition: color 0.3s !important;
+    -o-transition: color 0.3s !important;
+    -webkit-transition: color 0.3s !important;
+    transition: color 0.3s !important;
+}
+
+.text-center {
+    text-align: center !important;
+}
+
+.headerGami {
+    font-weight: 600 !important;
+    font-size: 15px !important;
+}
+
+.contentGami {
+    font-size: 15px !important;
+    color: #1165c2 !important;
+}
+
+.tableGami {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 14px;
+}
+
+.tableGami th, .tableGami td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+.tableGami th {
+    background-color: #f2f2f2;
+}
+
+.parentGami {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.childGami {
+    flex: 1 0 18%;
+    margin: 5px;
+    height: 100px;
+    border-radius: 6% !important;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 3px 10px !important;
+}
+
+.childGami:first-child,
+.childGami:nth-child(2) {
+    flex-basis: 40%;
+    border-radius: 1% !important;
+}
+
+.login-body-eprohealth {
+    background-image: linear-gradient(235deg,#1ba4df,#143f5f) !important;
+}
+
+.login-body .login-panel-eprohealth {
+    width: 650px;
+    background-color: #ffffff;
+    border-radius: 20px !important;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px !important;
+}
+
+.login-body .login-panel .login-image-eprohealth {
+    border-radius: 20px 0px 0px 20px !important;
+}
+
+.fotoProfile {
+    max-width: 240px !important;
+    max-height: 100% !important;
+}
+
+.imgLogoEmpresa {
+    max-width: 120px !important;
+}
+
+body .ui-button {
+    border-radius: 7px !important;
+}
+
+.layout-wrapper .layout-sidebar .layout-menu li > a i:first-child {
+    border-radius: 50% !important;
+}
+
+body .ui-fieldset {
+    border-radius: 7px !important;
+}
+
+body .ui-breadcrumb {
+    border-radius: 7px !important;
+}
+
+body .ui-datatable .ui-datatable-header {
+    border-radius: 7px 7px 0px 0px !important;
+}
+
+body .ui-datatable .ui-datatable-footer {
+    border-radius: 0px 0px 7px 7px !important;
+}
+
+body .ui-tabs.ui-tabs-left .ui-tabs-nav, body .ui-tabs.ui-tabs-right .ui-tabs-nav {
+    border-radius: 7px !important;
+}
+
+body .ui-tabs.ui-tabs-left .ui-tabs-panel {
+    border-radius: 0px 7px 7px 0px !important;
+}
+
+body .ui-tabs.ui-tabs-left .ui-tabs-nav li, body .ui-tabs.ui-tabs-right .ui-tabs-nav li {
+    border-radius: 7px 0px 7px 7px !important;
+}
+
+body .ui-inputfield {
+    border-radius: 7px !important;
+}
+
+body .ui-growl .ui-growl-item-container {
+    border-radius: 7px !important;
+}
+
+body .ui-selectonemenu {
+    border-radius: 7px !important;
+}
+
+body .ui-dialog {
+    border-radius: 7px !important;
+}
+
+body .ui-accordion .ui-accordion-header {
+    border-radius: 7px 7px 0px 0px !important;
+}
+
+body .ui-accordion .ui-accordion-content {
+    border-radius: 0px 0px 7px 7px !important;
+}
+
+.marginRight {
+    margin-right: 20px;
+}
+
+button.ui-button {
+    margin-right: .5rem;
+}
+
+body .ui-datatable .ui-datatable-header {
+    background: #ffffff !important;
+}
+
+body .ui-datatable .ui-datatable-header {
+    border: none !important;
+}
+
+.responsiveImg {
+    width: 100% !important;
+    height: 300px !important;
+}
+
+.removerPaddingPanelGrid .ui-panelgrid-cell {
+    padding: 0 !important;
+}
+
+.panelGridMaxSize {
+    width: 100%;
+}
