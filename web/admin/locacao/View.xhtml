@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="TblLocacaoViewDlg" widgetVar="TblLocacaoViewDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.ViewTblLocacaoTitle}">
+            <h:form id="TblLocacaoViewForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{tblLocacaoController.selected != null}">
+                        <h:outputText value="#{bundle.ViewTblLocacaoLabel_cdLocacao}"/>
+                        <h:outputText value="#{tblLocacaoController.selected.cdLocacao}" title="#{bundle.ViewTblLocacaoTitle_cdLocacao}"/>
+                        <h:outputText value="#{bundle.ViewTblLocacaoLabel_dtDevolucao}"/>
+                        <h:outputText value="#{tblLocacaoController.selected.dtDevolucao}" title="#{bundle.ViewTblLocacaoTitle_dtDevolucao}">
+                            <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                        </h:outputText>
+                        <h:outputText value="#{bundle.ViewTblLocacaoLabel_snStatus}"/>
+                        <h:outputText value="#{tblLocacaoController.selected.snStatus}" title="#{bundle.ViewTblLocacaoTitle_snStatus}"/>
+                        <h:outputText value="#{bundle.ViewTblLocacaoLabel_dtLocacao}"/>
+                        <h:outputText value="#{tblLocacaoController.selected.dtLocacao}" title="#{bundle.ViewTblLocacaoTitle_dtLocacao}">
+                            <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                        </h:outputText>
+                        <h:outputText value="#{bundle.ViewTblLocacaoLabel_cdAluno}"/>
+                        <h:outputText value="#{tblLocacaoController.selected.cdAluno}" title="#{bundle.ViewTblLocacaoTitle_cdAluno}"/>
+                        <h:outputText value="#{bundle.ViewTblLocacaoLabel_cdLivro}"/>
+                        <h:outputText value="#{tblLocacaoController.selected.cdLivro}" title="#{bundle.ViewTblLocacaoTitle_cdLivro}"/>
+                        <h:outputText value="#{bundle.ViewTblLocacaoLabel_cdUsuario}"/>
+                        <h:outputText value="#{tblLocacaoController.selected.cdUsuario}" title="#{bundle.ViewTblLocacaoTitle_cdUsuario}"/>
+                    </p:panelGrid>
+                    <p:commandButton value="#{bundle.Close}" onclick="TblLocacaoViewDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="TblTipoUsuarioEditDlg" widgetVar="TblTipoUsuarioEditDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.EditTblTipoUsuarioTitle}">
+            <h:form id="TblTipoUsuarioEditForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{tblTipoUsuarioController.selected != null}">
+                        <p:outputLabel value="#{bundle.EditTblTipoUsuarioLabel_cdTipoUsuario}" for="cdTipoUsuario" />
+                        <p:inputText id="cdTipoUsuario" value="#{tblTipoUsuarioController.selected.cdTipoUsuario}" title="#{bundle.EditTblTipoUsuarioTitle_cdTipoUsuario}" required="true" requiredMessage="#{bundle.EditTblTipoUsuarioRequiredMessage_cdTipoUsuario}"/>
+                        <p:outputLabel value="#{bundle.EditTblTipoUsuarioLabel_dsDescricao}" for="dsDescricao" />
+                        <p:inputText id="dsDescricao" value="#{tblTipoUsuarioController.selected.dsDescricao}" title="#{bundle.EditTblTipoUsuarioTitle_dsDescricao}" required="true" requiredMessage="#{bundle.EditTblTipoUsuarioRequiredMessage_dsDescricao}"/>
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{tblTipoUsuarioController.update}" value="#{bundle.Save}" update="display,:TblTipoUsuarioListForm:datalist,:growl" oncomplete="handleSubmit(args, 'TblTipoUsuarioEditDialog');"/>
+                    <p:commandButton value="#{bundle.Cancel}" onclick="TblTipoUsuarioEditDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

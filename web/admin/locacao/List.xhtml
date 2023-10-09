@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/template.xhtml">
+
+
+        <ui:define name="title">
+            <h:outputText value="#{bundle.ListTblLocacaoTitle}"></h:outputText>
+        </ui:define>
+
+        <ui:define name="body">
+            <h:form id="TblLocacaoListForm">
+                <p:panel header="#{bundle.ListTblLocacaoTitle}">
+                    <p:dataTable id="datalist" value="#{tblLocacaoController.items}" var="item"
+                                 selectionMode="single" selection="#{tblLocacaoController.selected}"
+                                 paginator="true"
+                                 rowKey="#{item.cdLocacao}"
+                                 rows="10"
+                                 rowsPerPageTemplate="10,20,30,40,50"
+                                 >
+
+                        <p:ajax event="rowSelect"   update="createButton viewButton editButton deleteButton"/>
+                        <p:ajax event="rowUnselect" update="createButton viewButton editButton deleteButton"/>
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListTblLocacaoTitle_cdLocacao}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.cdLocacao}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListTblLocacaoTitle_dtDevolucao}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.dtDevolucao}">
+                                <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListTblLocacaoTitle_snStatus}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.snStatus}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListTblLocacaoTitle_dtLocacao}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.dtLocacao}">
+                                <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListTblLocacaoTitle_cdAluno}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.cdAluno}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListTblLocacaoTitle_cdLivro}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.cdLivro}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListTblLocacaoTitle_cdUsuario}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.cdUsuario}"/>
+                        </p:column>
+                        <f:facet name="footer">
+                            <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{tblLocacaoController.prepareCreate}" update=":TblLocacaoCreateForm" oncomplete="PF('TblLocacaoCreateDialog').show()"/>
+                            <p:commandButton id="viewButton"   icon="ui-icon-search" value="#{bundle.View}" update=":TblLocacaoViewForm" oncomplete="PF('TblLocacaoViewDialog').show()" disabled="#{empty tblLocacaoController.selected}"/>
+                            <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update=":TblLocacaoEditForm" oncomplete="PF('TblLocacaoEditDialog').show()" disabled="#{empty tblLocacaoController.selected}"/>
+                            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{tblLocacaoController.destroy}" update=":growl,datalist" disabled="#{empty tblLocacaoController.selected}"/>
+                        </f:facet>
+                    </p:dataTable>
+                </p:panel>
+            </h:form>
+
+            <ui:include src="Create.xhtml"/>
+            <ui:include src="Edit.xhtml"/>
+            <ui:include src="View.xhtml"/>
+        </ui:define>
+    </ui:composition>
+
+</html>
