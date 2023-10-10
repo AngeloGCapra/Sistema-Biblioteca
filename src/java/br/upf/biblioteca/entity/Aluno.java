@@ -26,11 +26,12 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "aluno")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Aluno.findAll", query = "SELECT t FROM Aluno t"),
-    @NamedQuery(name = "Aluno.findByCdAluno", query = "SELECT t FROM Aluno t WHERE t.cdAluno = :cdAluno"),
-    @NamedQuery(name = "Aluno.findByNmNome", query = "SELECT t FROM Aluno t WHERE t.nmNome = :nmNome"),
-    @NamedQuery(name = "Aluno.findByNrDevendo", query = "SELECT t FROM Aluno t WHERE t.nrDevendo = :nrDevendo"),
-    @NamedQuery(name = "Aluno.findByDsContato", query = "SELECT t FROM Aluno t WHERE t.dsContato = :dsContato")})
+    @NamedQuery(name = "Aluno.findAll", query = "SELECT a FROM Aluno a"),
+    @NamedQuery(name = "Aluno.findAllOrderByNome", query = "SELECT a FROM Aluno a ORDER BY a.nmNome ASC"),
+    @NamedQuery(name = "Aluno.findByCdAluno", query = "SELECT a FROM Aluno a WHERE a.cdAluno = :cdAluno"),
+    @NamedQuery(name = "Aluno.findByNmNome", query = "SELECT a FROM Aluno a WHERE a.nmNome = :nmNome"),
+    @NamedQuery(name = "Aluno.findByNrDevendo", query = "SELECT a FROM Aluno a WHERE a.nrDevendo = :nrDevendo"),
+    @NamedQuery(name = "Aluno.findByDsContato", query = "SELECT a FROM Aluno a WHERE a.dsContato = :dsContato")})
 public class Aluno implements Serializable {
 
     private static final long serialVersionUID = 1L;
