@@ -44,28 +44,28 @@
                         <p:ajax event="rowSelect"   update="createButton viewButton editButton deleteButton reloadButton"/>
                         <p:ajax event="rowUnselect" update="createButton viewButton editButton deleteButton reloadButton"/>
 
-                        <p:column>
+                        <p:column sortBy="#{item.cdAluno}" filterBy="#{item.cdAluno}" filterMatchMode="exact">
                             <f:facet name="header">
                                 <h:outputText value="#{bundle.ListAlunoTitle_cdAluno}"/>
                             </f:facet>
                             <h:outputText value="#{item.cdAluno}"/>
                         </p:column>
 
-                        <p:column>
+                        <p:column sortBy="#{item.nmNome}" filterBy="#{item.nmNome}" filterMatchMode="contains">
                             <f:facet name="header">
                                 <h:outputText value="#{bundle.ListAlunoTitle_nmNome}"/>
                             </f:facet>
                             <h:outputText value="#{item.nmNome}"/>
                         </p:column>
 
-                        <p:column>
+                        <p:column sortBy="#{item.nrDevendo}" filterBy="#{item.nrDevendo}" filterMatchMode="exact">
                             <f:facet name="header">
                                 <h:outputText value="#{bundle.ListAlunoTitle_nrDevendo}"/>
                             </f:facet>
                             <h:outputText value="#{item.nrDevendo}"/>
                         </p:column>
 
-                        <p:column>
+                        <p:column sortBy="#{item.dsContato}" filterBy="#{item.dsContato}" filterMatchMode="contains">
                             <f:facet name="header">
                                 <h:outputText value="#{bundle.ListAlunoTitle_dsContato}"/>
                             </f:facet>
@@ -103,18 +103,18 @@
         </h:form>
 
         <!--Inicio do diálogo de criação-->
-        <p:dialog id="TblAlunoCreateDlg" widgetVar="TblAlunoCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.CreateTblAlunoTitle}">
-            <h:form id="TblAlunoCreateForm">
+        <p:dialog id="AlunoCreateDlg" widgetVar="AlunoCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.CreateAlunoTitle}">
+            <h:form id="AlunoCreateForm">
                 <h:panelGroup id="display">
-                    <h:panelGrid columns="2" rendered="#{tblAlunoController.selected != null}">
-                        <p:outputLabel value="#{bundle.CreateTblAlunoLabel_nmNome}" for="nmNome" />
-                        <p:inputText id="nmNome" value="#{tblAlunoController.selected.nmNome}" title="#{bundle.CreateTblAlunoTitle_nmNome}" required="true" requiredMessage="#{bundle.CreateTblAlunoRequiredMessage_nmNome}"/>
+                    <h:panelGrid columns="2" rendered="#{alunoController.selected != null}">
+                        <p:outputLabel value="#{bundle.CreateAlunoLabel_nmNome}" for="nmNome" />
+                        <p:inputText id="nmNome" value="#{alunoController.selected.nmNome}" title="#{bundle.CreateAlunoTitle_nmNome}" required="true" requiredMessage="#{bundle.CreateAlunoRequiredMessage_nmNome}"/>
                         
-                        <p:outputLabel value="#{bundle.CreateTblAlunoLabel_nrDevendo}" for="nrDevendo" />
-                        <p:inputText id="nrDevendo" value="#{tblAlunoController.selected.nrDevendo}" title="#{bundle.CreateTblAlunoTitle_nrDevendo}" />
+                        <p:outputLabel value="#{bundle.CreateAlunoLabel_nrDevendo}" for="nrDevendo" />
+                        <p:inputText id="nrDevendo" value="#{alunoController.selected.nrDevendo}" title="#{bundle.CreateAlunoTitle_nrDevendo}" />
                         
-                        <p:outputLabel value="#{bundle.CreateTblAlunoLabel_dsContato}" for="dsContato" />
-                        <p:inputText id="dsContato" value="#{tblAlunoController.selected.dsContato}" title="#{bundle.CreateTblAlunoTitle_dsContato}" required="true" requiredMessage="#{bundle.CreateTblAlunoRequiredMessage_dsContato}"/>
+                        <p:outputLabel value="#{bundle.CreateAlunoLabel_dsContato}" for="dsContato" />
+                        <p:inputText id="dsContato" value="#{alunoController.selected.dsContato}" title="#{bundle.CreateAlunoTitle_dsContato}" required="true" requiredMessage="#{bundle.CreateAlunoRequiredMessage_dsContato}"/>
                     </h:panelGrid>
                     <p:commandButton actionListener="#{alunoController.create}" action="${alunoController.clearAllFilters()}" icon="fa fa-save" value="#{bundle.Save}" update="display,:AlunoListForm:datalist,:growl,AlunoListForm:bdcAluno" oncomplete="handleSubmit(args,'AlunoCreateDialog');"/>
                     <p:commandButton actionListener="#{alunoController.cancelar()}" action="#{alunoController.clearAllFilters()}" immediate="true" value="#{bundle.Cancel}" icon="fa fa-close" onclick="AlunoCreateDialog.hide()"/>
@@ -124,21 +124,21 @@
         <!--Fim do diálogo de criação-->
 
         <!--Inicio do diálogo de edição-->
-        <p:dialog id="TblAlunoEditDlg" widgetVar="TblAlunoEditDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.EditTblAlunoTitle}">
-            <h:form id="TblAlunoEditForm">
+        <p:dialog id="AlunoEditDlg" widgetVar="AlunoEditDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.EditAlunoTitle}">
+            <h:form id="AlunoEditForm">
                 <h:panelGroup id="display">
-                    <h:panelGrid columns="2" rendered="#{tblAlunoController.selected != null}">
-                        <p:outputLabel value="#{bundle.EditTblAlunoLabel_cdAluno}" for="cdAluno" />
-                        <p:inputText id="cdAluno" value="#{tblAlunoController.selected.cdAluno}" title="#{bundle.EditTblAlunoTitle_cdAluno}" required="true" requiredMessage="#{bundle.EditTblAlunoRequiredMessage_cdAluno}" disabled="true"/>
+                    <h:panelGrid columns="2" rendered="#{alunoController.selected != null}">
+                        <p:outputLabel value="#{bundle.EditAlunoLabel_cdAluno}" for="cdAluno" />
+                        <p:inputText id="cdAluno" value="#{alunoController.selected.cdAluno}" title="#{bundle.EditAlunoTitle_cdAluno}" required="true" requiredMessage="#{bundle.EditAlunoRequiredMessage_cdAluno}" disabled="true"/>
                         
-                        <p:outputLabel value="#{bundle.EditTblAlunoLabel_nmNome}" for="nmNome" />
-                        <p:inputText id="nmNome" value="#{tblAlunoController.selected.nmNome}" title="#{bundle.EditTblAlunoTitle_nmNome}" required="true" requiredMessage="#{bundle.EditTblAlunoRequiredMessage_nmNome}"/>
+                        <p:outputLabel value="#{bundle.EditAlunoLabel_nmNome}" for="nmNome" />
+                        <p:inputText id="nmNome" value="#{alunoController.selected.nmNome}" title="#{bundle.EditAlunoTitle_nmNome}" required="true" requiredMessage="#{bundle.EditAlunoRequiredMessage_nmNome}"/>
                         
-                        <p:outputLabel value="#{bundle.EditTblAlunoLabel_nrDevendo}" for="nrDevendo" />
-                        <p:inputText id="nrDevendo" value="#{tblAlunoController.selected.nrDevendo}" title="#{bundle.EditTblAlunoTitle_nrDevendo}" />
+                        <p:outputLabel value="#{bundle.EditAlunoLabel_nrDevendo}" for="nrDevendo" />
+                        <p:inputText id="nrDevendo" value="#{alunoController.selected.nrDevendo}" title="#{bundle.EditAlunoTitle_nrDevendo}" />
                         
-                        <p:outputLabel value="#{bundle.EditTblAlunoLabel_dsContato}" for="dsContato" />
-                        <p:inputText id="dsContato" value="#{tblAlunoController.selected.dsContato}" title="#{bundle.EditTblAlunoTitle_dsContato}" required="true" requiredMessage="#{bundle.EditTblAlunoRequiredMessage_dsContato}"/>
+                        <p:outputLabel value="#{bundle.EditAlunoLabel_dsContato}" for="dsContato" />
+                        <p:inputText id="dsContato" value="#{alunoController.selected.dsContato}" title="#{bundle.EditAlunoTitle_dsContato}" required="true" requiredMessage="#{bundle.EditAlunoRequiredMessage_dsContato}"/>
                     </h:panelGrid>
                     <p:commandButton actionListener="#{alunoController.update}" action="#{alunoController.clearAllFilters()}" value="#{bundle.Save}" icon="fa fa-save" update="display,:AlunoListForm:datalist,:growl" oncomplete="handleSubmit(args, 'AlunoEditDialog');"/>
                     <p:commandButton actionListener="#{alunoController.cancelar()}" action="#{alunoController.clearAllFilters()}" immediate="true" value="#{bundle.Cancel}" icon="fa fa-close" onclick="AlunoEditDialog.hide()"/>
@@ -148,21 +148,21 @@
         <!--Fim do diálogo de edição-->
 
         <!--Inicio do diálogo de visualização-->
-        <p:dialog id="TblAlunoViewDlg" widgetVar="TblAlunoViewDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.ViewTblAlunoTitle}">
-            <h:form id="TblAlunoViewForm">
+        <p:dialog id="AlunoViewDlg" widgetVar="AlunoViewDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.ViewAlunoTitle}">
+            <h:form id="AlunoViewForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" rendered="#{tblAlunoController.selected != null}">
-                        <h:outputText value="#{bundle.ViewTblAlunoLabel_cdAluno}"/>
-                        <h:outputText value="#{tblAlunoController.selected.cdAluno}" title="#{bundle.ViewTblAlunoTitle_cdAluno}"/>
+                    <p:panelGrid columns="2" rendered="#{alunoController.selected != null}">
+                        <h:outputText value="#{bundle.ViewAlunoLabel_cdAluno}"/>
+                        <h:outputText value="#{alunoController.selected.cdAluno}" title="#{bundle.ViewAlunoTitle_cdAluno}"/>
                         
-                        <h:outputText value="#{bundle.ViewTblAlunoLabel_nmNome}"/>
-                        <h:outputText value="#{tblAlunoController.selected.nmNome}" title="#{bundle.ViewTblAlunoTitle_nmNome}"/>
+                        <h:outputText value="#{bundle.ViewAlunoLabel_nmNome}"/>
+                        <h:outputText value="#{alunoController.selected.nmNome}" title="#{bundle.ViewAlunoTitle_nmNome}"/>
                         
-                        <h:outputText value="#{bundle.ViewTblAlunoLabel_nrDevendo}"/>
-                        <h:outputText value="#{tblAlunoController.selected.nrDevendo}" title="#{bundle.ViewTblAlunoTitle_nrDevendo}"/>
+                        <h:outputText value="#{bundle.ViewAlunoLabel_nrDevendo}"/>
+                        <h:outputText value="#{alunoController.selected.nrDevendo}" title="#{bundle.ViewAlunoTitle_nrDevendo}"/>
                         
-                        <h:outputText value="#{bundle.ViewTblAlunoLabel_dsContato}"/>
-                        <h:outputText value="#{tblAlunoController.selected.dsContato}" title="#{bundle.ViewTblAlunoTitle_dsContato}"/>
+                        <h:outputText value="#{bundle.ViewAlunoLabel_dsContato}"/>
+                        <h:outputText value="#{alunoController.selected.dsContato}" title="#{bundle.ViewAlunoTitle_dsContato}"/>
                     </p:panelGrid>
                     <p:commandButton immediate="true" value="#{bundle.Close}" icon="fa fa-close" onclick="AlunoViewDialog.hide()"/>
                 </h:panelGroup>

@@ -30,6 +30,7 @@ public class AlunoController implements Serializable {
 
     @EJB
     private br.upf.biblioteca.facade.AlunoFacade ejbFacade;
+    
     private List<Aluno> items = null;
     private Aluno selected;
     private List<Aluno> filteredAluno;

@@ -30,6 +30,7 @@ public class UsuarioController implements Serializable {
 
     @EJB
     private br.upf.biblioteca.facade.UsuarioFacade ejbFacade;
+    
     private List<Usuario> items = null;
     private Usuario selected;
     private List<Usuario> filteredUsuario;

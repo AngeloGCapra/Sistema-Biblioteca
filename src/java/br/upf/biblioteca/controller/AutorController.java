@@ -4,6 +4,7 @@ import br.upf.biblioteca.entity.Autor;
 import br.upf.biblioteca.controller.util.JsfUtil;
 import br.upf.biblioteca.controller.util.JsfUtil.PersistAction;
 import br.upf.biblioteca.facade.AutorFacade;
+import br.upf.biblioteca.service.CommonService;
 
 import java.io.Serializable;
 import java.util.List;
@@ -18,15 +19,24 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import org.primefaces.PrimeFaces;
+import org.primefaces.component.datatable.DataTable;
+import org.primefaces.event.ToggleEvent;
+import org.primefaces.model.Visibility;
 
-@Named("tblAutorController")
+@Named("autorController")
 @SessionScoped
 public class AutorController implements Serializable {
 
     @EJB
     private br.upf.biblioteca.facade.AutorFacade ejbFacade;
+    
     private List<Autor> items = null;
     private Autor selected;
+    private List<Autor> filteredAutor;
+    private List<Boolean> listIsTrue;
+    
+    private final CommonService commonService = new CommonService();
 
     public AutorController() {
     }
@@ -56,18 +66,18 @@ public class AutorController implements Serializable {
     }
 
     public void create() {
-        persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("TblAutorCreated"));
+        persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("AutorCreated"));
         if (!JsfUtil.isValidationFailed()) {
             items = null;    // Invalidate list of items to trigger re-query.
         }
     }
 
     public void update() {
-        persist(PersistAction.UPDATE, ResourceBundle.getBundle("/Bundle").getString("TblAutorUpdated"));
+        persist(PersistAction.UPDATE, ResourceBundle.getBundle("/Bundle").getString("AutorUpdated"));
     }
 
     public void destroy() {
-        persist(PersistAction.DELETE, ResourceBundle.getBundle("/Bundle").getString("TblAutorDeleted"));
+        persist(PersistAction.DELETE, ResourceBundle.getBundle("/Bundle").getString("AutorDeleted"));
         if (!JsfUtil.isValidationFailed()) {
             selected = null; // Remove selection
             items = null;    // Invalidate list of items to trigger re-query.
@@ -109,7 +119,7 @@ public class AutorController implements Serializable {
         }
     }
 
-    public Autor getTblAutor(java.lang.Integer id) {
+    public Autor getAutor(java.lang.Integer id) {
         return getFacade().find(id);
     }
 
@@ -120,9 +130,58 @@ public class AutorController implements Serializable {
     public List<Autor> getItemsAvailableSelectOne() {
         return getFacade().findAll();
     }
+    
+    public List<Autor> getFilteredAutor() {
+        return filteredAutor;
+    }
+
+    public void setFilteredAutor(List<Autor> filteredAutor) {
+        this.filteredAutor = filteredAutor;
+    }
+    
+    /**
+     * Buscar todos os registros, ordenando por código. Utilizando as regras
+     * para buscar os dados novamente na base de dados.
+     *
+     * @param isReload
+     * @return
+     */
+    public List<Autor> findAllOrderByNomeIsReload(boolean isReload) {
+        if (commonService.reloadItems((items == null), isReload)) {
+            items = getFacade().findAllOrderByNome();
+        }
+        return items;
+    }
+
+    public List<Boolean> getListIsTrue() {
+        return listIsTrue;
+    }
+
+    public void setListIsTrue(List<Boolean> listIsTrue) {
+        this.listIsTrue = listIsTrue;
+    }
+
+    public void onToggle(ToggleEvent e) {
+        listIsTrue.set((Integer) e.getData(), e.getVisibility() == Visibility.VISIBLE);
+    }
+
+    //Método que atualiza a dataTable e limpa os filtros das colunas
+    public void clearAllFilters() {
+        DataTable dataTable = (DataTable) FacesContext.getCurrentInstance().getViewRoot().findComponent("AutorListForm:datalist");
+        if (dataTable != null && dataTable.getFilterBy() != null && !dataTable.getFilterBy().toString().isEmpty()) {
+            dataTable.reset();
+
+            PrimeFaces.current().ajax().update("AutorListForm:datalist");
+        }
+    }
+
+    public void cancelar() {
+        selected = null;
+        items = null;
+    }
 
     @FacesConverter(forClass = Autor.class)
-    public static class TblAutorControllerConverter implements Converter {
+    public static class AutorControllerConverter implements Converter {
 
         @Override
         public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
@@ -130,8 +189,8 @@ public class AutorController implements Serializable {
                 return null;
             }
             AutorController controller = (AutorController) facesContext.getApplication().getELResolver().
-                    getValue(facesContext.getELContext(), null, "tblAutorController");
-            return controller.getTblAutor(getKey(value));
+                    getValue(facesContext.getELContext(), null, "autorController");
+            return controller.getAutor(getKey(value));
         }
 
         java.lang.Integer getKey(String value) {

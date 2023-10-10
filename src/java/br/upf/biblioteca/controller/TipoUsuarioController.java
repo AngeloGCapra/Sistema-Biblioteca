@@ -30,6 +30,7 @@ public class TipoUsuarioController implements Serializable {
 
     @EJB
     private br.upf.biblioteca.facade.TipoUsuarioFacade ejbFacade;
+    
     private List<TipoUsuario> items = null;
     private TipoUsuario selected;
     private List<TipoUsuario> filteredTipoUsuario;

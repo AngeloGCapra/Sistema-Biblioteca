@@ -1,7 +1,6 @@
 package br.upf.biblioteca.facade;
 
 import br.upf.biblioteca.entity.Aluno;
-import br.upf.biblioteca.entity.Usuario;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
