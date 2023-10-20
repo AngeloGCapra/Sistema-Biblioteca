@@ -1,92 +1,238 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
 
-    <ui:composition template="/template.xhtml">
+    <ui:define name="title">
+        <h:outputText value="#{bundle.ListLocacaoTitle}"></h:outputText>
+    </ui:define>
 
+    <ui:define name="content">
+        <h:form id="LocacaoListForm">
+            <h:panelGroup id="pngList">
+                <p:breadCrumb id="bdcLocacao" style="text-align: left; margin-bottom: 4px; text-transform: uppercase">
+                    <p:menuitem value="#{bundle.Title}"/>
+                    <p:menuitem value="#{bundle.BreadcrumbLabel_Locacao}"/>
+                </p:breadCrumb>
 
-        <ui:define name="title">
-            <h:outputText value="#{bundle.ListTblLocacaoTitle}"></h:outputText>
-        </ui:define>
-
-        <ui:define name="body">
-            <h:form id="TblLocacaoListForm">
-                <p:panel header="#{bundle.ListTblLocacaoTitle}">
-                    <p:dataTable id="datalist" value="#{tblLocacaoController.items}" var="item"
-                                 selectionMode="single" selection="#{tblLocacaoController.selected}"
+                <p:fieldset toggleable="true">
+                    <p:dataTable id="datalist" value="#{locacaoController.findAllOrderByDataDevolucaoIsReload(false)}" var="item" widgetVar="LocacaoTable"
+                                 selectionMode="single" selection="#{locacaoController.selected}"
                                  paginator="true"
                                  rowKey="#{item.cdLocacao}"
-                                 rows="10"
-                                 rowsPerPageTemplate="10,20,30,40,50"
+                                 rows="#{bundle.DataTable_rows}"
+                                 rowsPerPageTemplate="#{bundle.DataTable_rowsPerPageTemplate}"
+                                 filteredValue="#{locacaoController.filteredLocacao}"
+                                 emptyMessage="#{bundle.emptyMessage}"
                                  >
 
-                        <p:ajax event="rowSelect"   update="createButton viewButton editButton deleteButton"/>
-                        <p:ajax event="rowUnselect" update="createButton viewButton editButton deleteButton"/>
+                        <f:facet name="header">     
+                            <p:toolbar>
+                                <f:facet name="right">
+                                    <p:outputPanel style="text-align: right !important;">
+                                        <p:commandButton id="toggler" type="button" value="#{bundle.Datatable_Columns}" style="float:right" icon="fa fa-calculator" />
+                                        <p:columnToggler datasource="datalist" trigger="toggler">
+                                            <p:ajax event="toggle" listener="#{locacaoController.onToggle}"/>
+                                        </p:columnToggler>
+                                    </p:outputPanel>
+                                </f:facet>
+                            </p:toolbar>
+                        </f:facet>
+
+                        <p:ajax event="rowSelect"   update="createButton viewButton editButton deleteButton reloadButton"/>
+                        <p:ajax event="rowUnselect" update="createButton viewButton editButton deleteButton reloadButton"/>
 
                         <p:column>
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListTblLocacaoTitle_cdLocacao}"/>
+                                <h:outputText value="#{bundle.ListLocacaoTitle_cdLocacao}"/>
                             </f:facet>
                             <h:outputText value="#{item.cdLocacao}"/>
                         </p:column>
+
                         <p:column>
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListTblLocacaoTitle_dtDevolucao}"/>
+                                <h:outputText value="#{bundle.ListLocacaoTitle_dtDevolucao}"/>
                             </f:facet>
                             <h:outputText value="#{item.dtDevolucao}">
-                                <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
                             </h:outputText>
                         </p:column>
+
                         <p:column>
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListTblLocacaoTitle_snStatus}"/>
+                                <h:outputText value="#{bundle.ListLocacaoTitle_snStatus}"/>
                             </f:facet>
                             <h:outputText value="#{item.snStatus}"/>
                         </p:column>
+
                         <p:column>
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListTblLocacaoTitle_dtLocacao}"/>
+                                <h:outputText value="#{bundle.ListLocacaoTitle_dtLocacao}"/>
                             </f:facet>
                             <h:outputText value="#{item.dtLocacao}">
-                                <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
                             </h:outputText>
                         </p:column>
+
                         <p:column>
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListTblLocacaoTitle_cdAluno}"/>
+                                <h:outputText value="#{bundle.ListLocacaoTitle_cdLocacao}"/>
                             </f:facet>
-                            <h:outputText value="#{item.cdAluno}"/>
+                            <h:outputText value="#{item.cdLocacao}"/>
                         </p:column>
+
                         <p:column>
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListTblLocacaoTitle_cdLivro}"/>
+                                <h:outputText value="#{bundle.ListLocacaoTitle_cdLivro}"/>
                             </f:facet>
                             <h:outputText value="#{item.cdLivro}"/>
                         </p:column>
+
                         <p:column>
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListTblLocacaoTitle_cdUsuario}"/>
+                                <h:outputText value="#{bundle.ListLocacaoTitle_cdUsuario}"/>
                             </f:facet>
                             <h:outputText value="#{item.cdUsuario}"/>
-                        </p:column>
+                        </p:column>                                       
+
                         <f:facet name="footer">
-                            <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{tblLocacaoController.prepareCreate}" update=":TblLocacaoCreateForm" oncomplete="PF('TblLocacaoCreateDialog').show()"/>
-                            <p:commandButton id="viewButton"   icon="ui-icon-search" value="#{bundle.View}" update=":TblLocacaoViewForm" oncomplete="PF('TblLocacaoViewDialog').show()" disabled="#{empty tblLocacaoController.selected}"/>
-                            <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update=":TblLocacaoEditForm" oncomplete="PF('TblLocacaoEditDialog').show()" disabled="#{empty tblLocacaoController.selected}"/>
-                            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{tblLocacaoController.destroy}" update=":growl,datalist" disabled="#{empty tblLocacaoController.selected}"/>
+                            <p:commandButton id="createButton" icon="fa fa-plus"   value="#{bundle.Create}" actionListener="#{locacaoController.prepareCreate()}"
+                                             update=":LocacaoCreateForm" oncomplete="PF('LocacaoCreateDialog').show()"/>                            
+
+                            <p:commandButton id="editButton"   icon="fa fa-edit" value="#{bundle.Edit}" update=":LocacaoEditForm" oncomplete="PF('LocacaoEditDialog').show()" 
+                                             disabled="#{empty locacaoController.selected}"/>
+
+                            <p:commandButton id="viewButton" icon="fa fa-search" value="#{bundle.View}" update=":LocacaoViewForm" oncomplete="PF('LocacaoViewDialog').show()" 
+                                             disabled="#{empty locacaoController.selected}"/>
+
+                            <p:commandButton id="deleteButton" icon="fa fa-trash"  value="#{bundle.Delete}" actionListener="#{locacaoController.destroy}" 
+                                             action="#{locacaoController.clearAllFilters()}" update=":growl,datalist,:LocacaoListForm:pngList" 
+                                             disabled="#{empty locacaoController.selected}">
+                                <p:confirm header="#{bundle.Confirmacao}" message="#{bundle.MessageConfirmationDestroy}" icon="fa fa-triangle-exclamation"/>
+                            </p:commandButton>
+
+                            <p:commandButton id="reloadButton" icon="fa fa-refresh"  value="#{bundle.Reload}" 
+                                             actionListener="#{locacaoController.findAllOrderByDataDevolucaoIsReload(true)}"
+                                             action="#{locacaoController.cancelar()}"
+                                             update=":growl,:LocacaoListForm"/>
                         </f:facet>
                     </p:dataTable>
-                </p:panel>
+                </p:fieldset>
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton value="#{bundle.YesTitle}" type="button" styleClass="ui-confirmdialog-yes" icon="fa fa-check" />
+                    <p:commandButton value="#{bundle.NoTitle}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-times" />
+                </p:confirmDialog>
+            </h:panelGroup>
+        </h:form>
+
+        <!--Inicio do diálogo de criação-->
+        <p:dialog id="LocacaoCreateDlg" widgetVar="LocacaoCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.CreateLocacaoTitle}">
+            <h:form id="LocacaoCreateForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{locacaoController.selected != null}">
+                        <p:outputLabel value="#{bundle.CreateLocacaoLabel_dtDevolucao}" for="dtDevolucao" />
+                        <p:calendar id="dtDevolucao" pattern="dd/MM/yyyy" value="#{locacaoController.selected.dtDevolucao}" title="#{bundle.EditLocacaoTitle_dtDevolucao}" required="true" requiredMessage="#{bundle.EditLocacaoRequiredMessage_dtDevolucao}" showOn="button"/>
+
+                        <p:outputLabel value="#{bundle.CreateLocacaoLabel_snStatus}" for="snStatus" />
+                        <p:inputText id="snStatus" value="#{locacaoController.selected.snStatus}" title="#{bundle.CreateLocacaoTitle_snStatus}" required="true" requiredMessage="#{bundle.CreateLocacaoRequiredMessage_snStatus}"/>
+
+                        <p:outputLabel value="#{bundle.CreateLocacaoLabel_dtLocacao}" for="dtLocacao" />
+                        <p:calendar id="dtLocacao" pattern="dd/MM/yyyy" value="#{locacaoController.selected.dtLocacao}" title="#{bundle.EditLocacaoTitle_dtLocacao}" required="true" requiredMessage="#{bundle.EditLocacaoRequiredMessage_dtLocacao}" showOn="button"/>
+
+                        <p:outputLabel value="#{bundle.CreateLocacaoLabel_cdLivro}" for="cdLivro" />
+                        <p:selectOneMenu id="cdLivro" value="#{locacaoController.selected.cdLivro}" required="true" requiredMessage="#{bundle.EditLocacaoRequiredMessage_cdLivro}">
+                            <f:selectItems value="#{livroController.itemsAvailableSelectOne}"
+                                           var="cdLivroItem"
+                                           itemValue="#{cdLivroItem}"/>
+                        </p:selectOneMenu>
+
+                        <p:outputLabel value="#{bundle.CreateLocacaoLabel_cdUsuario}" for="cdUsuario" />
+                        <p:selectOneMenu id="cdUsuario" value="#{locacaoController.selected.cdUsuario}" required="true" requiredMessage="#{bundle.EditLocacaoRequiredMessage_cdUsuario}">
+                            <f:selectItems value="#{tblUsuarioController.itemsAvailableSelectOne}"
+                                           var="cdUsuarioItem"
+                                           itemValue="#{cdUsuarioItem}"/>
+                        </p:selectOneMenu>
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{locacaoController.create}" value="#{bundle.Save}" update="display,:LocacaoListForm:datalist,:growl" oncomplete="handleSubmit(args,'LocacaoCreateDialog');"/>
+                    <p:commandButton value="#{bundle.Cancel}" onclick="LocacaoCreateDialog.hide()"/>
+                </h:panelGroup>
             </h:form>
+        </p:dialog>
+        <!--Fim do diálogo de criação-->
 
-            <ui:include src="Create.xhtml"/>
-            <ui:include src="Edit.xhtml"/>
-            <ui:include src="View.xhtml"/>
-        </ui:define>
-    </ui:composition>
+        <!--Inicio do diálogo de edição-->
+        <p:dialog id="LocacaoEditDlg" widgetVar="LocacaoEditDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.EditLocacaoTitle}">
+            <h:form id="LocacaoEditForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{locacaoController.selected != null}">
+                        <p:outputLabel value="#{bundle.EditLocacaoLabel_cdLocacao}" for="cdLocacao" />
+                        <p:inputText id="cdLocacao" value="#{locacaoController.selected.cdLocacao}" title="#{bundle.EditLocacaoTitle_cdLocacao}" required="true" requiredMessage="#{bundle.EditLocacaoRequiredMessage_cdLocacao}" disabled="true"/>
 
-</html>
+                        <p:outputLabel value="#{bundle.EditLocacaoLabel_dtDevolucao}" for="dtDevolucao" />
+                        <p:calendar id="dtDevolucao" pattern="dd/MM/yyyy" value="#{locacaoController.selected.dtDevolucao}" title="#{bundle.EditLocacaoTitle_dtDevolucao}" required="true" requiredMessage="#{bundle.EditLocacaoRequiredMessage_dtDevolucao}" showOn="button"/>
+
+                        <p:outputLabel value="#{bundle.EditLocacaoLabel_snStatus}" for="snStatus" />
+                        <p:inputText id="snStatus" value="#{locacaoController.selected.snStatus}" title="#{bundle.EditLocacaoTitle_snStatus}" required="true" requiredMessage="#{bundle.EditLocacaoRequiredMessage_snStatus}"/>
+
+                        <p:outputLabel value="#{bundle.EditLocacaoLabel_dtLocacao}" for="dtLocacao" />
+                        <p:calendar id="dtLocacao" pattern="dd/MM/yyyy" value="#{locacaoController.selected.dtLocacao}" title="#{bundle.EditLocacaoTitle_dtLocacao}" required="true" requiredMessage="#{bundle.EditLocacaoRequiredMessage_dtLocacao}" showOn="button"/>
+
+                        <p:outputLabel value="#{bundle.EditLocacaoLabel_cdLivro}" for="cdLivro" />
+                        <p:selectOneMenu id="cdLivro" value="#{locacaoController.selected.cdLivro}" required="true" requiredMessage="#{bundle.EditLocacaoRequiredMessage_cdLivro}">
+                            <f:selectItem itemLabel="#{bundle.SelectOneMessage}"/>
+                            <f:selectItems value="#{livroController.itemsAvailableSelectOne}"
+                                           var="cdLivroItem"
+                                           itemValue="#{cdLivroItem}"/>
+                        </p:selectOneMenu>
+
+                        <p:outputLabel value="#{bundle.EditLocacaoLabel_cdUsuario}" for="cdUsuario" />
+                        <p:selectOneMenu id="cdUsuario" value="#{locacaoController.selected.cdUsuario}" required="true" requiredMessage="#{bundle.EditLocacaoRequiredMessage_cdUsuario}">
+                            <f:selectItem itemLabel="#{bundle.SelectOneMessage}"/>
+                            <f:selectItems value="#{tblUsuarioController.itemsAvailableSelectOne}"
+                                           var="cdUsuarioItem"
+                                           itemValue="#{cdUsuarioItem}"/>
+                        </p:selectOneMenu>
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{locacaoController.update}" value="#{bundle.Save}" update="display,:LocacaoListForm:datalist,:growl" oncomplete="handleSubmit(args, 'LocacaoEditDialog');"/>
+                    <p:commandButton value="#{bundle.Cancel}" onclick="LocacaoEditDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+        <!--Fim do diálogo de edição-->
+
+        <!--Inicio do diálogo de visualização-->
+        <p:dialog id="LocacaoViewDlg" widgetVar="LocacaoViewDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.ViewLocacaoTitle}">
+            <h:form id="LocacaoViewForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{locacaoController.selected != null}">
+                        <h:outputText value="#{bundle.ViewLocacaoLabel_cdLocacao}"/>
+                        <h:outputText value="#{locacaoController.selected.cdLocacao}" title="#{bundle.ViewLocacaoTitle_cdLocacao}"/>
+                        
+                        <h:outputText value="#{bundle.ViewLocacaoLabel_dtDevolucao}"/>
+                        <h:outputText value="#{locacaoController.selected.dtDevolucao}" title="#{bundle.ViewLocacaoTitle_dtDevolucao}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                        
+                        <h:outputText value="#{bundle.ViewLocacaoLabel_snStatus}"/>
+                        <h:outputText value="#{locacaoController.selected.snStatus}" title="#{bundle.ViewLocacaoTitle_snStatus}"/>
+                        
+                        <h:outputText value="#{bundle.ViewLocacaoLabel_dtLocacao}"/>
+                        <h:outputText value="#{locacaoController.selected.dtLocacao}" title="#{bundle.ViewLocacaoTitle_dtLocacao}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                        
+                        <h:outputText value="#{bundle.ViewLocacaoLabel_cdLivro}"/>
+                        <h:outputText value="#{locacaoController.selected.cdLivro}" title="#{bundle.ViewLocacaoTitle_cdLivro}"/>
+                        
+                        <h:outputText value="#{bundle.ViewLocacaoLabel_cdUsuario}"/>
+                        <h:outputText value="#{locacaoController.selected.cdUsuario}" title="#{bundle.ViewLocacaoTitle_cdUsuario}"/>
+                    </p:panelGrid>
+                    <p:commandButton value="#{bundle.Close}" onclick="LocacaoViewDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+        <!--Fim do diálogo de visualização-->
+    </ui:define>
+</ui:composition>

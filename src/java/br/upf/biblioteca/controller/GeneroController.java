@@ -4,6 +4,7 @@ import br.upf.biblioteca.entity.Genero;
 import br.upf.biblioteca.controller.util.JsfUtil;
 import br.upf.biblioteca.controller.util.JsfUtil.PersistAction;
 import br.upf.biblioteca.facade.GeneroFacade;
+import br.upf.biblioteca.service.CommonService;
 
 import java.io.Serializable;
 import java.util.List;
@@ -18,8 +19,12 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import org.primefaces.PrimeFaces;
+import org.primefaces.component.datatable.DataTable;
+import org.primefaces.event.ToggleEvent;
+import org.primefaces.model.Visibility;
 
-@Named("tblGeneroController")
+@Named("generoController")
 @SessionScoped
 public class GeneroController implements Serializable {
 
@@ -27,6 +32,10 @@ public class GeneroController implements Serializable {
     private br.upf.biblioteca.facade.GeneroFacade ejbFacade;
     private List<Genero> items = null;
     private Genero selected;
+    private List<Genero> filteredGenero;
+    private List<Boolean> listIsTrue;
+    
+    private final CommonService commonService = new CommonService();
 
     public GeneroController() {
     }
@@ -56,18 +65,18 @@ public class GeneroController implements Serializable {
     }
 
     public void create() {
-        persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("TblGeneroCreated"));
+        persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("GeneroCreated"));
         if (!JsfUtil.isValidationFailed()) {
             items = null;    // Invalidate list of items to trigger re-query.
         }
     }
 
     public void update() {
-        persist(PersistAction.UPDATE, ResourceBundle.getBundle("/Bundle").getString("TblGeneroUpdated"));
+        persist(PersistAction.UPDATE, ResourceBundle.getBundle("/Bundle").getString("GeneroUpdated"));
     }
 
     public void destroy() {
-        persist(PersistAction.DELETE, ResourceBundle.getBundle("/Bundle").getString("TblGeneroDeleted"));
+        persist(PersistAction.DELETE, ResourceBundle.getBundle("/Bundle").getString("GeneroDeleted"));
         if (!JsfUtil.isValidationFailed()) {
             selected = null; // Remove selection
             items = null;    // Invalidate list of items to trigger re-query.
@@ -109,7 +118,7 @@ public class GeneroController implements Serializable {
         }
     }
 
-    public Genero getTblGenero(java.lang.Integer id) {
+    public Genero getGenero(java.lang.Integer id) {
         return getFacade().find(id);
     }
 
@@ -120,9 +129,58 @@ public class GeneroController implements Serializable {
     public List<Genero> getItemsAvailableSelectOne() {
         return getFacade().findAll();
     }
+    
+    public List<Genero> getFilteredGenero() {
+        return filteredGenero;
+    }
+
+    public void setFilteredGenero(List<Genero> filteredGenero) {
+        this.filteredGenero = filteredGenero;
+    }
+    
+    /**
+     * Buscar todos os registros, ordenando por código. Utilizando as regras
+     * para buscar os dados novamente na base de dados.
+     *
+     * @param isReload
+     * @return
+     */
+    public List<Genero> findAllOrderByDescricaoIsReload(boolean isReload) {
+        if (commonService.reloadItems((items == null), isReload)) {
+            items = getFacade().findAllOrderByDescricao();
+        }
+        return items;
+    }
+
+    public List<Boolean> getListIsTrue() {
+        return listIsTrue;
+    }
+
+    public void setListIsTrue(List<Boolean> listIsTrue) {
+        this.listIsTrue = listIsTrue;
+    }
+
+    public void onToggle(ToggleEvent e) {
+        listIsTrue.set((Integer) e.getData(), e.getVisibility() == Visibility.VISIBLE);
+    }
+
+    //Método que atualiza a dataTable e limpa os filtros das colunas
+    public void clearAllFilters() {
+        DataTable dataTable = (DataTable) FacesContext.getCurrentInstance().getViewRoot().findComponent("GeneroListForm:datalist");
+        if (dataTable != null && dataTable.getFilterBy() != null && !dataTable.getFilterBy().toString().isEmpty()) {
+            dataTable.reset();
+
+            PrimeFaces.current().ajax().update("GeneroListForm:datalist");
+        }
+    }
+
+    public void cancelar() {
+        selected = null;
+        items = null;
+    }
 
     @FacesConverter(forClass = Genero.class)
-    public static class TblGeneroControllerConverter implements Converter {
+    public static class GeneroControllerConverter implements Converter {
 
         @Override
         public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
@@ -130,8 +188,8 @@ public class GeneroController implements Serializable {
                 return null;
             }
             GeneroController controller = (GeneroController) facesContext.getApplication().getELResolver().
-                    getValue(facesContext.getELContext(), null, "tblGeneroController");
-            return controller.getTblGenero(getKey(value));
+                    getValue(facesContext.getELContext(), null, "generoController");
+            return controller.getGenero(getKey(value));
         }
 
         java.lang.Integer getKey(String value) {

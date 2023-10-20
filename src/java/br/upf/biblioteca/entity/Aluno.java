@@ -137,7 +137,7 @@ public class Aluno implements Serializable {
 
     @Override
     public String toString() {
-        return "br.upf.biblioteca.entity.Aluno[ cdAluno=" + cdAluno + " ]";
+        return nmNome;
     }
     
 }

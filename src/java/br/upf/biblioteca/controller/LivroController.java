@@ -4,6 +4,7 @@ import br.upf.biblioteca.entity.Livro;
 import br.upf.biblioteca.controller.util.JsfUtil;
 import br.upf.biblioteca.controller.util.JsfUtil.PersistAction;
 import br.upf.biblioteca.facade.LivroFacade;
+import br.upf.biblioteca.service.CommonService;
 
 import java.io.Serializable;
 import java.util.List;
@@ -18,15 +19,24 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import org.primefaces.PrimeFaces;
+import org.primefaces.component.datatable.DataTable;
+import org.primefaces.event.ToggleEvent;
+import org.primefaces.model.Visibility;
 
-@Named("tblLivroController")
+@Named("livroController")
 @SessionScoped
 public class LivroController implements Serializable {
 
     @EJB
     private br.upf.biblioteca.facade.LivroFacade ejbFacade;
+    
     private List<Livro> items = null;
     private Livro selected;
+    private List<Livro> filteredLivro;
+    private List<Boolean> listIsTrue;
+    
+    private final CommonService commonService = new CommonService();
 
     public LivroController() {
     }
@@ -56,18 +66,18 @@ public class LivroController implements Serializable {
     }
 
     public void create() {
-        persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("TblLivroCreated"));
+        persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("LivroCreated"));
         if (!JsfUtil.isValidationFailed()) {
             items = null;    // Invalidate list of items to trigger re-query.
         }
     }
 
     public void update() {
-        persist(PersistAction.UPDATE, ResourceBundle.getBundle("/Bundle").getString("TblLivroUpdated"));
+        persist(PersistAction.UPDATE, ResourceBundle.getBundle("/Bundle").getString("LivroUpdated"));
     }
 
     public void destroy() {
-        persist(PersistAction.DELETE, ResourceBundle.getBundle("/Bundle").getString("TblLivroDeleted"));
+        persist(PersistAction.DELETE, ResourceBundle.getBundle("/Bundle").getString("LivroDeleted"));
         if (!JsfUtil.isValidationFailed()) {
             selected = null; // Remove selection
             items = null;    // Invalidate list of items to trigger re-query.
@@ -109,7 +119,7 @@ public class LivroController implements Serializable {
         }
     }
 
-    public Livro getTblLivro(java.lang.Integer id) {
+    public Livro getLivro(java.lang.Integer id) {
         return getFacade().find(id);
     }
 
@@ -120,9 +130,58 @@ public class LivroController implements Serializable {
     public List<Livro> getItemsAvailableSelectOne() {
         return getFacade().findAll();
     }
+    
+    public List<Livro> getFilteredLivro() {
+        return filteredLivro;
+    }
+
+    public void setFilteredLivro(List<Livro> filteredLivro) {
+        this.filteredLivro = filteredLivro;
+    }
+    
+    /**
+     * Buscar todos os registros, ordenando por nome. Utilizando as regras
+     * para buscar os dados novamente na base de dados.
+     *
+     * @param isReload
+     * @return
+     */
+    public List<Livro> findAllOrderByNomeLivroIsReload(boolean isReload) {
+        if (commonService.reloadItems((items == null), isReload)) {
+            items = getFacade().findAllOrderByNomeLivro();
+        }
+        return items;
+    }
+
+    public List<Boolean> getListIsTrue() {
+        return listIsTrue;
+    }
+
+    public void setListIsTrue(List<Boolean> listIsTrue) {
+        this.listIsTrue = listIsTrue;
+    }
+
+    public void onToggle(ToggleEvent e) {
+        listIsTrue.set((Integer) e.getData(), e.getVisibility() == Visibility.VISIBLE);
+    }
+
+    //Método que atualiza a dataTable e limpa os filtros das colunas
+    public void clearAllFilters() {
+        DataTable dataTable = (DataTable) FacesContext.getCurrentInstance().getViewRoot().findComponent("LivroListForm:datalist");
+        if (dataTable != null && dataTable.getFilterBy() != null && !dataTable.getFilterBy().toString().isEmpty()) {
+            dataTable.reset();
+
+            PrimeFaces.current().ajax().update("LivroListForm:datalist");
+        }
+    }
+
+    public void cancelar() {
+        selected = null;
+        items = null;
+    }
 
     @FacesConverter(forClass = Livro.class)
-    public static class TblLivroControllerConverter implements Converter {
+    public static class LivroControllerConverter implements Converter {
 
         @Override
         public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
@@ -130,8 +189,8 @@ public class LivroController implements Serializable {
                 return null;
             }
             LivroController controller = (LivroController) facesContext.getApplication().getELResolver().
-                    getValue(facesContext.getELContext(), null, "tblLivroController");
-            return controller.getTblLivro(getKey(value));
+                    getValue(facesContext.getELContext(), null, "livroController");
+            return controller.getLivro(getKey(value));
         }
 
         java.lang.Integer getKey(String value) {

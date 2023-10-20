@@ -68,10 +68,7 @@ public class Usuario implements Serializable {
     @Size(min = 1, max = 2147483647)
     @Column(name = "ds_email")
     private String dsEmail;
-    
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cdUsuario")
-    private Collection<Livro> livroCollection;
-    
+      
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "cdUsuario")
     private Collection<Locacao> locacaoCollection;
     
@@ -135,15 +132,6 @@ public class Usuario implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Livro> getLivroCollection() {
-        return livroCollection;
-    }
-
-    public void setLivroCollection(Collection<Livro> livroCollection) {
-        this.livroCollection = livroCollection;
-    }
-
-    @XmlTransient
     public Collection<Locacao> getLocacaoCollection() {
         return locacaoCollection;
     }
@@ -182,7 +170,7 @@ public class Usuario implements Serializable {
 
     @Override
     public String toString() {
-        return "br.upf.biblioteca.entity.Usuario[ cdUsuario=" + cdUsuario + " ]";
+        return nmNome;
     }
     
 }

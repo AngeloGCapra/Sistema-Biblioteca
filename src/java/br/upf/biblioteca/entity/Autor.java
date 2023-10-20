@@ -127,7 +127,7 @@ public class Autor implements Serializable {
 
     @Override
     public String toString() {
-        return "br.upf.biblioteca.entity.Autor[ cdAutor=" + cdAutor + " ]";
+        return nmNome;
     }
     
 }

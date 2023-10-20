@@ -1,13 +1,13 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package br.upf.biblioteca.facade;
 
 import br.upf.biblioteca.entity.Genero;
+import java.util.ArrayList;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -18,6 +18,8 @@ public class GeneroFacade extends AbstractFacade<Genero> {
 
     @PersistenceContext(unitName = "BibliotecaPU")
     private EntityManager em;
+    private List<Genero> entityList;
+    private final Logger logger = Logger.getLogger(GeneroFacade.class.getName());
 
     @Override
     protected EntityManager getEntityManager() {
@@ -26,6 +28,22 @@ public class GeneroFacade extends AbstractFacade<Genero> {
 
     public GeneroFacade() {
         super(Genero.class);
+    }
+    
+    /**
+     * Método utilizado para buscar uma lista ordenada
+     *
+     * @return
+     */
+    public List<Genero> findAllOrderByDescricao() {
+        entityList = new ArrayList<>();
+        try {
+            Query query = getEntityManager().createNamedQuery("Genero.findAllOrderByDescricao");
+            entityList = (List<Genero>) query.getResultList();
+        } catch (Exception e) {
+            logger.error("Erro: " + e);
+        }
+        return entityList;
     }
     
 }

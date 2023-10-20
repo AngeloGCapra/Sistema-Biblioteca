@@ -28,14 +28,15 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "livro")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Livro.findAll", query = "SELECT t FROM Livro t"),
-    @NamedQuery(name = "Livro.findByCdLivro", query = "SELECT t FROM Livro t WHERE t.cdLivro = :cdLivro"),
-    @NamedQuery(name = "Livro.findByCdRegistro", query = "SELECT t FROM Livro t WHERE t.cdRegistro = :cdRegistro"),
-    @NamedQuery(name = "Livro.findByNmLivro", query = "SELECT t FROM Livro t WHERE t.nmLivro = :nmLivro"),
-    @NamedQuery(name = "Livro.findByNmEdicao", query = "SELECT t FROM Livro t WHERE t.nmEdicao = :nmEdicao"),
-    @NamedQuery(name = "Livro.findByNmEditora", query = "SELECT t FROM Livro t WHERE t.nmEditora = :nmEditora"),
-    @NamedQuery(name = "Livro.findByNrFaixaEtaria", query = "SELECT t FROM Livro t WHERE t.nrFaixaEtaria = :nrFaixaEtaria"),
-    @NamedQuery(name = "Livro.findByNrCopias", query = "SELECT t FROM Livro t WHERE t.nrCopias = :nrCopias")})
+    @NamedQuery(name = "Livro.findAll", query = "SELECT l FROM Livro l"),
+    @NamedQuery(name = "Livro.findAllOrderByNomeLivro", query = "SELECT l FROM Livro l ORDER BY l.nmLivro"),
+    @NamedQuery(name = "Livro.findByCdLivro", query = "SELECT l FROM Livro l WHERE l.cdLivro = :cdLivro"),
+    @NamedQuery(name = "Livro.findByCdRegistro", query = "SELECT l FROM Livro l WHERE l.cdRegistro = :cdRegistro"),
+    @NamedQuery(name = "Livro.findByNmLivro", query = "SELECT l FROM Livro l WHERE l.nmLivro = :nmLivro"),
+    @NamedQuery(name = "Livro.findByNmEdicao", query = "SELECT l FROM Livro l WHERE l.nmEdicao = :nmEdicao"),
+    @NamedQuery(name = "Livro.findByNmEditora", query = "SELECT l FROM Livro l WHERE l.nmEditora = :nmEditora"),
+    @NamedQuery(name = "Livro.findByNrFaixaEtaria", query = "SELECT l FROM Livro l WHERE l.nrFaixaEtaria = :nrFaixaEtaria"),
+    @NamedQuery(name = "Livro.findByNrCopias", query = "SELECT l FROM Livro l WHERE l.nrCopias = :nrCopias")})
 public class Livro implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -84,10 +85,6 @@ public class Livro implements Serializable {
     @JoinColumn(name = "cd_genero", referencedColumnName = "cd_genero")
     @ManyToOne(optional = false)
     private Genero cdGenero;
-    
-    @JoinColumn(name = "cd_usuario", referencedColumnName = "cd_usuario")
-    @ManyToOne(optional = false)
-    private Usuario cdUsuario;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "cdLivro")
     private Collection<Locacao> locacaoCollection;
@@ -180,14 +177,6 @@ public class Livro implements Serializable {
         this.cdGenero = cdGenero;
     }
 
-    public Usuario getCdUsuario() {
-        return cdUsuario;
-    }
-
-    public void setCdUsuario(Usuario cdUsuario) {
-        this.cdUsuario = cdUsuario;
-    }
-
     @XmlTransient
     public Collection<Locacao> getLocacaoCollection() {
         return locacaoCollection;
@@ -219,7 +208,7 @@ public class Livro implements Serializable {
 
     @Override
     public String toString() {
-        return "br.upf.biblioteca.entity.Livro[ cdLivro=" + cdLivro + " ]";
+        return nmLivro;
     }
     
 }

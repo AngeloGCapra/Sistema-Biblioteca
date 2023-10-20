@@ -140,7 +140,7 @@ public class TipoUsuarioController implements Serializable {
     }
     
     /**
-     * Buscar todos os registros, ordenando por código. Utilizando as regras
+     * Buscar todos os registros, ordenando por descrição. Utilizando as regras
      * para buscar os dados novamente na base de dados.
      *
      * @param isReload

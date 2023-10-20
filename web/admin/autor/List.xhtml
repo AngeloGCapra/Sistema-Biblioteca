@@ -101,15 +101,15 @@
         <p:dialog id="AutorCreateDlg" widgetVar="AutorCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.CreateAutorTitle}">
             <h:form id="AutorCreateForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" rendered="#{autorController.selected != null}">
+                    <h:panelGrid columns="2" rendered="#{autorController.selected != null}">
                         <p:outputLabel value="#{bundle.CreateAutorLabel_nmNome}" for="nmNome" />
                         <p:inputText id="nmNome" value="#{autorController.selected.nmNome}" title="#{bundle.CreateAutorTitle_nmNome}" required="true" requiredMessage="#{bundle.CreateAutorRequiredMessage_nmNome}"/>
                         
                         <p:outputLabel value="#{bundle.CreateAutorLabel_dtNascimento}" for="dtNascimento" />
                         <p:calendar id="dtNascimento" pattern="dd/MM/yyyy" value="#{autorController.selected.dtNascimento}" title="#{bundle.CreateAutorTitle_dtNascimento}" required="true" requiredMessage="#{bundle.CreateAutorRequiredMessage_dtNascimento}" showOn="button"/>
-                    </p:panelGrid>
-                    <p:commandButton actionListener="#{autorController.create}" value="#{bundle.Save}" update="display,:AutorListForm:datalist,:growl" oncomplete="handleSubmit(args,'AutorCreateDialog');"/>
-                    <p:commandButton value="#{bundle.Cancel}" onclick="AutorCreateDialog.hide()"/>
+                    </h:panelGrid>
+                    <p:commandButton actionListener="#{autorController.create}" action="${autorController.clearAllFilters()}" icon="fa fa-save" value="#{bundle.Save}" update="display,:AutorListForm:datalist,:growl,AutorListForm:bdcAutor" oncomplete="handleSubmit(args,'AutorCreateDialog');"/>
+                    <p:commandButton actionListener="#{autorController.cancelar()}" action="#{autorController.clearAllFilters()}" immediate="true" value="#{bundle.Cancel}" icon="fa fa-close" onclick="AutorCreateDialog.hide()"/>
                 </h:panelGroup>
             </h:form>
         </p:dialog>
@@ -119,7 +119,7 @@
         <p:dialog id="AutorEditDlg" widgetVar="AutorEditDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.EditAutorTitle}">
             <h:form id="AutorEditForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" rendered="#{autorController.selected != null}">
+                    <h:panelGrid columns="2" rendered="#{autorController.selected != null}">
                         <p:outputLabel value="#{bundle.EditAutorLabel_cdAutor}" for="cdAutor" />
                         <p:inputText id="cdAutor" value="#{autorController.selected.cdAutor}" title="#{bundle.EditAutorTitle_cdAutor}" required="true" requiredMessage="#{bundle.EditAutorRequiredMessage_cdAutor}" disabled="true"/>
                         
@@ -128,9 +128,9 @@
                         
                         <p:outputLabel value="#{bundle.EditAutorLabel_dtNascimento}" for="dtNascimento" />
                         <p:calendar id="dtNascimento" pattern="dd/MM/yyyy" value="#{autorController.selected.dtNascimento}" title="#{bundle.EditAutorTitle_dtNascimento}" required="true" requiredMessage="#{bundle.EditAutorRequiredMessage_dtNascimento}" showOn="button"/>
-                    </p:panelGrid>
-                    <p:commandButton actionListener="#{autorController.update}" value="#{bundle.Save}" update="display,:AutorListForm:datalist,:growl" oncomplete="handleSubmit(args, 'AutorEditDialog');"/>
-                    <p:commandButton value="#{bundle.Cancel}" onclick="AutorEditDialog.hide()"/>
+                    </h:panelGrid>
+                    <p:commandButton actionListener="#{autorController.update}" action="#{autorController.clearAllFilters()}" value="#{bundle.Save}" icon="fa fa-save" update="display,:AutorListForm:datalist,:growl" oncomplete="handleSubmit(args, 'AutorEditDialog');"/>
+                    <p:commandButton actionListener="#{autorController.cancelar()}" action="#{autorController.clearAllFilters()}" immediate="true" value="#{bundle.Cancel}" icon="fa fa-close" onclick="AutorEditDialog.hide()"/>
                 </h:panelGroup>
             </h:form>
         </p:dialog>
@@ -152,7 +152,7 @@
                             <f:convertDateTime pattern="dd/MM/yyyy" />
                         </h:outputText>
                     </p:panelGrid>
-                    <p:commandButton value="#{bundle.Close}" onclick="AutorViewDialog.hide()"/>
+                    <p:commandButton immediate="true" value="#{bundle.Close}" icon="fa fa-close" onclick="AutorViewDialog.hide()"/>
                 </h:panelGroup>
             </h:form>
         </p:dialog>
