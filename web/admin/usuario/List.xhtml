@@ -144,7 +144,7 @@
                         
                         <p:outputLabel value="#{bundle.CreateUsuarioLabel_dsSenha}" for="dsSenha" />
                         <p:password id="dsSenha" value="#{usuarioController.selected.dsSenha}" title="#{bundle.CreateUsuarioTitle_dsSenha}" feedback="true" 
-                                     required="true" requiredMessage="#{bundle.CreateUsuarioRequiredMessage_dsSenha}"/>                                               
+                                     required="true" requiredMessage="#{bundle.CreateUsuarioRequiredMessage_dsSenha}"/>
                     </h:panelGrid>
                     <p:commandButton actionListener="#{usuarioController.create}" action="${usuarioController.clearAllFilters()}" icon="fa fa-save" value="#{bundle.Save}" update="display,:UsuarioListForm:datalist,:growl,UsuarioListForm:bdcUsuario" oncomplete="handleSubmit(args,'UsuarioCreateDialog');"/>
                     <p:commandButton actionListener="#{usuarioController.cancelar()}" action="#{usuarioController.clearAllFilters()}" immediate="true" value="#{bundle.Cancel}" icon="fa fa-close" onclick="UsuarioCreateDialog.hide()"/>
