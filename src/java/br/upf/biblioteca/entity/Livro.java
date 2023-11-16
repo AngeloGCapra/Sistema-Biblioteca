@@ -2,6 +2,7 @@ package br.upf.biblioteca.entity;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -15,6 +16,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -36,56 +39,63 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Livro.findByNmEdicao", query = "SELECT l FROM Livro l WHERE l.nmEdicao = :nmEdicao"),
     @NamedQuery(name = "Livro.findByNmEditora", query = "SELECT l FROM Livro l WHERE l.nmEditora = :nmEditora"),
     @NamedQuery(name = "Livro.findByNrFaixaEtaria", query = "SELECT l FROM Livro l WHERE l.nrFaixaEtaria = :nrFaixaEtaria"),
+    @NamedQuery(name = "Livro.findByDtLancamento", query = "SELECT l FROM Livro l WHERE l.dtLancamento = :dtLancamento"),
     @NamedQuery(name = "Livro.findByNrCopias", query = "SELECT l FROM Livro l WHERE l.nrCopias = :nrCopias")})
 public class Livro implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "cd_livro")
     private Integer cdLivro;
-    
+
     @Basic(optional = false)
     @NotNull
     @Column(name = "cd_registro")
     private int cdRegistro;
-    
+
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 250)
     @Column(name = "nm_livro")
     private String nmLivro;
-    
+
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 250)
     @Column(name = "nm_edicao")
     private String nmEdicao;
-    
+
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 250)
     @Column(name = "nm_editora")
     private String nmEditora;
-    
+
     @Column(name = "nr_faixa_etaria")
     private Integer nrFaixaEtaria;
-    
+
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "dt_lancamento")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dtLancamento;
+
     @Basic(optional = false)
     @NotNull
     @Column(name = "nr_copias")
     private int nrCopias;
-    
+
     @JoinColumn(name = "cd_autor", referencedColumnName = "cd_autor")
     @ManyToOne(optional = false)
     private Autor cdAutor;
-    
+
     @JoinColumn(name = "cd_genero", referencedColumnName = "cd_genero")
     @ManyToOne(optional = false)
     private Genero cdGenero;
-    
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "cdLivro")
     private Collection<Locacao> locacaoCollection;
 
@@ -177,6 +187,14 @@ public class Livro implements Serializable {
         this.cdGenero = cdGenero;
     }
 
+    public Date getDtLancamento() {
+        return dtLancamento;
+    }
+
+    public void setDtLancamento(Date dtLancamento) {
+        this.dtLancamento = dtLancamento;
+    }
+
     @XmlTransient
     public Collection<Locacao> getLocacaoCollection() {
         return locacaoCollection;
@@ -210,5 +228,5 @@ public class Livro implements Serializable {
     public String toString() {
         return nmLivro;
     }
-    
+
 }

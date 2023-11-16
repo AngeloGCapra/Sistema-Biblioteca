@@ -64,6 +64,20 @@
                             </f:facet>
                             <h:outputText value="#{item.nmLivro}"/>
                         </p:column>
+                        
+                        <p:column sortBy="#{item.cdAutor.nmNome}" filterBy="#{item.cdAutor.nmNome}" filterMatchMode="contains">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListLivroTitle_cdAutor}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.cdAutor.nmNome}"/>
+                        </p:column>
+
+                        <p:column sortBy="#{item.cdGenero.dsDescricao}" filterBy="#{item.cdGenero.dsDescricao}" filterMatchMode="contains">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListLivroTitle_cdGenero}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.cdGenero.dsDescricao}"/>
+                        </p:column>
 
                         <p:column sortBy="#{item.nmEdicao}" filterBy="#{item.nmEdicao}" filterMatchMode="contains">
                             <f:facet name="header">
@@ -85,27 +99,22 @@
                             </f:facet>
                             <h:outputText value="#{item.nrFaixaEtaria}"/>
                         </p:column>
+                        
+                        <p:column sortBy="#{item.dtLancamento}" filterBy="#{item.dtLancamento}" filterMatchMode="contains">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListLivroTitle_dtLancamento}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.dtLancamento}">
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </h:outputText>
+                        </p:column>
 
                         <p:column sortBy="#{item.nrCopias}" filterBy="#{item.nrCopias}" filterMatchMode="contains">
                             <f:facet name="header">
                                 <h:outputText value="#{bundle.ListLivroTitle_nrCopias}"/>
                             </f:facet>
                             <h:outputText value="#{item.nrCopias}"/>
-                        </p:column>
-
-                        <p:column sortBy="#{item.cdAutor}" filterBy="#{item.cdAutor}" filterMatchMode="contains">
-                            <f:facet name="header">
-                                <h:outputText value="#{bundle.ListLivroTitle_cdAutor}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.cdAutor}"/>
-                        </p:column>
-
-                        <p:column sortBy="#{item.cdGenero}" filterBy="#{item.cdGenero}" filterMatchMode="contains">
-                            <f:facet name="header">
-                                <h:outputText value="#{bundle.ListLivroTitle_cdGenero}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.cdGenero}"/>
-                        </p:column>
+                        </p:column>                        
 
                         <f:facet name="footer">
                             <p:commandButton id="createButton" icon="fa fa-plus"   value="#{bundle.Create}" actionListener="#{livroController.prepareCreate()}"
@@ -143,36 +152,49 @@
                 <h:panelGroup id="display">
                     <h:panelGrid columns="2" rendered="#{livroController.selected != null}">
                         <p:outputLabel value="#{bundle.CreateLivroLabel_cdRegistro}" for="cdRegistro" />
-                        <p:inputText id="cdRegistro" value="#{livroController.selected.cdRegistro}" title="#{bundle.CreateLivroTitle_cdRegistro}" required="true" requiredMessage="#{bundle.CreateLivroRequiredMessage_cdRegistro}"/>
-                        
-                        <p:outputLabel value="#{bundle.CreateLivroLabel_nmLivro}" for="nmLivro" />
-                        <p:inputText id="nmLivro" value="#{livroController.selected.nmLivro}" title="#{bundle.CreateLivroTitle_nmLivro}" required="true" requiredMessage="#{bundle.CreateLivroRequiredMessage_nmLivro}"/>
-                        
-                        <p:outputLabel value="#{bundle.CreateLivroLabel_nmEdicao}" for="nmEdicao" />
-                        <p:inputText id="nmEdicao" value="#{livroController.selected.nmEdicao}" title="#{bundle.CreateLivroTitle_nmEdicao}" required="true" requiredMessage="#{bundle.CreateLivroRequiredMessage_nmEdicao}"/>
-                        
-                        <p:outputLabel value="#{bundle.CreateLivroLabel_nmEditora}" for="nmEditora" />
-                        <p:inputText id="nmEditora" value="#{livroController.selected.nmEditora}" title="#{bundle.CreateLivroTitle_nmEditora}" required="true" requiredMessage="#{bundle.CreateLivroRequiredMessage_nmEditora}"/>
-                        
-                        <p:outputLabel value="#{bundle.CreateLivroLabel_nrFaixaEtaria}" for="nrFaixaEtaria" />
-                        <p:inputText id="nrFaixaEtaria" value="#{livroController.selected.nrFaixaEtaria}" title="#{bundle.CreateLivroTitle_nrFaixaEtaria}" />
-                        
-                        <p:outputLabel value="#{bundle.CreateLivroLabel_nrCopias}" for="nrCopias" />
-                        <p:inputText id="nrCopias" value="#{livroController.selected.nrCopias}" title="#{bundle.CreateLivroTitle_nrCopias}" required="true" requiredMessage="#{bundle.CreateLivroRequiredMessage_nrCopias}"/>
+                        <p:inputText id="cdRegistro" value="#{livroController.selected.cdRegistro}" title="#{bundle.CreateLivroTitle_cdRegistro}" 
+                                     required="true" requiredMessage="#{bundle.CreateLivroRequiredMessage_cdRegistro}"/>
                         
                         <p:outputLabel value="#{bundle.CreateLivroLabel_cdAutor}" for="cdAutor" />
-                        <p:selectOneMenu id="cdAutor" value="#{livroController.selected.cdAutor}" required="true" requiredMessage="#{bundle.EditLivroRequiredMessage_cdAutor}">
-                            <f:selectItems value="#{tblAutorController.itemsAvailableSelectOne}"
+                        <p:selectOneMenu id="cdAutor" value="#{livroController.selected.cdAutor}" 
+                                         required="true" requiredMessage="#{bundle.EditLivroRequiredMessage_cdAutor}">
+                            <f:selectItem itemLabel="#{bundle.SelectOneMessage}"/>
+                            <f:selectItems value="#{autorController.itemsAvailableSelectOne}"
                                            var="cdAutorItem"
                                            itemValue="#{cdAutorItem}"/>
                         </p:selectOneMenu>
                         
                         <p:outputLabel value="#{bundle.CreateLivroLabel_cdGenero}" for="cdGenero" />
-                        <p:selectOneMenu id="cdGenero" value="#{livroController.selected.cdGenero}" required="true" requiredMessage="#{bundle.EditLivroRequiredMessage_cdGenero}">
-                            <f:selectItems value="#{tblGeneroController.itemsAvailableSelectOne}"
+                        <p:selectOneMenu id="cdGenero" value="#{livroController.selected.cdGenero}" 
+                                         required="true" requiredMessage="#{bundle.EditLivroRequiredMessage_cdGenero}">
+                            <f:selectItem itemLabel="#{bundle.SelectOneMessage}"/>
+                            <f:selectItems value="#{generoController.itemsAvailableSelectOne}"
                                            var="cdGeneroItem"
                                            itemValue="#{cdGeneroItem}"/>
-                        </p:selectOneMenu>                    
+                        </p:selectOneMenu>
+                        
+                        <p:outputLabel value="#{bundle.CreateLivroLabel_nmLivro}" for="nmLivro" />
+                        <p:inputText id="nmLivro" value="#{livroController.selected.nmLivro}" title="#{bundle.CreateLivroTitle_nmLivro}" 
+                                     required="true" requiredMessage="#{bundle.CreateLivroRequiredMessage_nmLivro}"/>
+                        
+                        <p:outputLabel value="#{bundle.CreateLivroLabel_nmEdicao}" for="nmEdicao" />
+                        <p:inputText id="nmEdicao" value="#{livroController.selected.nmEdicao}" title="#{bundle.CreateLivroTitle_nmEdicao}" 
+                                     required="true" requiredMessage="#{bundle.CreateLivroRequiredMessage_nmEdicao}"/>
+                        
+                        <p:outputLabel value="#{bundle.CreateLivroLabel_nmEditora}" for="nmEditora" />
+                        <p:inputText id="nmEditora" value="#{livroController.selected.nmEditora}" title="#{bundle.CreateLivroTitle_nmEditora}" 
+                                     required="true" requiredMessage="#{bundle.CreateLivroRequiredMessage_nmEditora}"/>
+                        
+                        <p:outputLabel value="#{bundle.CreateLivroLabel_nrFaixaEtaria}" for="nrFaixaEtaria" />
+                        <p:inputText id="nrFaixaEtaria" value="#{livroController.selected.nrFaixaEtaria}" title="#{bundle.CreateLivroTitle_nrFaixaEtaria}" />
+                        
+                        <p:outputLabel value="#{bundle.CreateLivroLabel_dtLancamento}" for="dtLancamento" />
+                        <p:calendar id="dtLancamento" pattern="dd/MM/yyyy" value="#{livroController.selected.dtLancamento}" title="#{bundle.CreateLivroTitle_dtLancamento}" 
+                                    required="true" requiredMessage="#{bundle.CreateLivroRequiredMessage_dtLancamento}" showOn="button"/>
+                        
+                        <p:outputLabel value="#{bundle.CreateLivroLabel_nrCopias}" for="nrCopias" />
+                        <p:inputText id="nrCopias" value="#{livroController.selected.nrCopias}" title="#{bundle.CreateLivroTitle_nrCopias}" 
+                                     required="true" requiredMessage="#{bundle.CreateLivroRequiredMessage_nrCopias}"/>                                                
                     </h:panelGrid>
                     <p:commandButton actionListener="#{livroController.create}" action="${livroController.clearAllFilters()}" icon="fa fa-save" value="#{bundle.Save}" update="display,:LivroListForm:datalist,:growl,LivroListForm:bdcLivro" oncomplete="handleSubmit(args,'LivroCreateDialog');"/>
                     <p:commandButton actionListener="#{livroController.cancelar()}" action="#{livroController.clearAllFilters()}" immediate="true" value="#{bundle.Cancel}" icon="fa fa-close" onclick="LivroCreateDialog.hide()"/>
@@ -187,30 +209,41 @@
                 <h:panelGroup id="display">
                     <h:panelGrid columns="2" rendered="#{livroController.selected != null}">
                         <p:outputLabel value="#{bundle.EditLivroLabel_cdLivro}" for="cdLivro" />
-                        <p:inputText id="cdLivro" value="#{livroController.selected.cdLivro}" title="#{bundle.EditLivroTitle_cdLivro}" required="true" requiredMessage="#{bundle.EditLivroRequiredMessage_cdLivro}" disabled="true"/>
+                        <p:inputText id="cdLivro" value="#{livroController.selected.cdLivro}" title="#{bundle.EditLivroTitle_cdLivro}" 
+                                     required="true" requiredMessage="#{bundle.EditLivroRequiredMessage_cdLivro}" disabled="true"/>
                         
                         <p:outputLabel value="#{bundle.EditLivroLabel_cdRegistro}" for="cdRegistro" />
-                        <p:inputText id="cdRegistro" value="#{livroController.selected.cdRegistro}" title="#{bundle.EditLivroTitle_cdRegistro}" required="true" requiredMessage="#{bundle.EditLivroRequiredMessage_cdRegistro}"/>
+                        <p:inputText id="cdRegistro" value="#{livroController.selected.cdRegistro}" title="#{bundle.EditLivroTitle_cdRegistro}" 
+                                     required="true" requiredMessage="#{bundle.EditLivroRequiredMessage_cdRegistro}"/>
                         
                         <p:outputLabel value="#{bundle.EditLivroLabel_nmLivro}" for="nmLivro" />
-                        <p:inputText id="nmLivro" value="#{livroController.selected.nmLivro}" title="#{bundle.EditLivroTitle_nmLivro}" required="true" requiredMessage="#{bundle.EditLivroRequiredMessage_nmLivro}"/>
+                        <p:inputText id="nmLivro" value="#{livroController.selected.nmLivro}" title="#{bundle.EditLivroTitle_nmLivro}" 
+                                     required="true" requiredMessage="#{bundle.EditLivroRequiredMessage_nmLivro}"/>
                         
                         <p:outputLabel value="#{bundle.EditLivroLabel_nmEdicao}" for="nmEdicao" />
-                        <p:inputText id="nmEdicao" value="#{livroController.selected.nmEdicao}" title="#{bundle.EditLivroTitle_nmEdicao}" required="true" requiredMessage="#{bundle.EditLivroRequiredMessage_nmEdicao}"/>
+                        <p:inputText id="nmEdicao" value="#{livroController.selected.nmEdicao}" title="#{bundle.EditLivroTitle_nmEdicao}" 
+                                     required="true" requiredMessage="#{bundle.EditLivroRequiredMessage_nmEdicao}"/>
                         
                         <p:outputLabel value="#{bundle.EditLivroLabel_nmEditora}" for="nmEditora" />
-                        <p:inputText id="nmEditora" value="#{livroController.selected.nmEditora}" title="#{bundle.EditLivroTitle_nmEditora}" required="true" requiredMessage="#{bundle.EditLivroRequiredMessage_nmEditora}"/>
+                        <p:inputText id="nmEditora" value="#{livroController.selected.nmEditora}" title="#{bundle.EditLivroTitle_nmEditora}" 
+                                     required="true" requiredMessage="#{bundle.EditLivroRequiredMessage_nmEditora}"/>
                         
                         <p:outputLabel value="#{bundle.EditLivroLabel_nrFaixaEtaria}" for="nrFaixaEtaria" />
                         <p:inputText id="nrFaixaEtaria" value="#{livroController.selected.nrFaixaEtaria}" title="#{bundle.EditLivroTitle_nrFaixaEtaria}" />
                         
+                        <p:outputLabel value="#{bundle.EditLivroLabel_dtLancamento}" for="dtLancamento" />
+                        <p:calendar id="dtLancamento" pattern="dd/MM/yyyy" value="#{livroController.selected.dtLancamento}" title="#{bundle.EditLivroTitle_dtLancamento}" 
+                                    required="true" requiredMessage="#{bundle.EditLivroRequiredMessage_dtLancamento}" showOn="button"/>
+                        
                         <p:outputLabel value="#{bundle.EditLivroLabel_nrCopias}" for="nrCopias" />
-                        <p:inputText id="nrCopias" value="#{livroController.selected.nrCopias}" title="#{bundle.EditLivroTitle_nrCopias}" required="true" requiredMessage="#{bundle.EditLivroRequiredMessage_nrCopias}"/>
+                        <p:inputText id="nrCopias" value="#{livroController.selected.nrCopias}" title="#{bundle.EditLivroTitle_nrCopias}" 
+                                     required="true" requiredMessage="#{bundle.EditLivroRequiredMessage_nrCopias}"/>
                         
                         <p:outputLabel value="#{bundle.EditLivroLabel_cdAutor}" for="cdAutor" />
-                        <p:selectOneMenu id="cdAutor" value="#{livroController.selected.cdAutor}" required="true" requiredMessage="#{bundle.EditLivroRequiredMessage_cdAutor}">
+                        <p:selectOneMenu id="cdAutor" value="#{livroController.selected.cdAutor}" 
+                                         required="true" requiredMessage="#{bundle.EditLivroRequiredMessage_cdAutor}">
                             <f:selectItem itemLabel="#{bundle.SelectOneMessage}"/>
-                            <f:selectItems value="#{tblAutorController.itemsAvailableSelectOne}"
+                            <f:selectItems value="#{autorController.itemsAvailableSelectOne}"
                                            var="cdAutorItem"
                                            itemValue="#{cdAutorItem}"/>
                         </p:selectOneMenu>
@@ -218,7 +251,7 @@
                         <p:outputLabel value="#{bundle.EditLivroLabel_cdGenero}" for="cdGenero" />
                         <p:selectOneMenu id="cdGenero" value="#{livroController.selected.cdGenero}" required="true" requiredMessage="#{bundle.EditLivroRequiredMessage_cdGenero}">
                             <f:selectItem itemLabel="#{bundle.SelectOneMessage}"/>
-                            <f:selectItems value="#{tblGeneroController.itemsAvailableSelectOne}"
+                            <f:selectItems value="#{generoController.itemsAvailableSelectOne}"
                                            var="cdGeneroItem"
                                            itemValue="#{cdGeneroItem}"/>
                         </p:selectOneMenu>
@@ -252,6 +285,11 @@
                         
                         <h:outputText value="#{bundle.ViewLivroLabel_nrFaixaEtaria}"/>
                         <h:outputText value="#{livroController.selected.nrFaixaEtaria}" title="#{bundle.ViewLivroTitle_nrFaixaEtaria}"/>
+                        
+                        <h:outputText value="#{bundle.ViewLivroLabel_dtLancamento}"/>
+                        <h:outputText value="#{livroController.selected.dtNascimento}" title="#{bundle.ViewLivroTitle_dtLancamento}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
                         
                         <h:outputText value="#{bundle.ViewLivroLabel_nrCopias}"/>
                         <h:outputText value="#{livroController.selected.nrCopias}" title="#{bundle.ViewLivroTitle_nrCopias}"/>

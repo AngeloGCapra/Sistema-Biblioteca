@@ -30,7 +30,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Aluno.findAllOrderByNome", query = "SELECT a FROM Aluno a ORDER BY a.nmNome ASC"),
     @NamedQuery(name = "Aluno.findByCdAluno", query = "SELECT a FROM Aluno a WHERE a.cdAluno = :cdAluno"),
     @NamedQuery(name = "Aluno.findByNmNome", query = "SELECT a FROM Aluno a WHERE a.nmNome = :nmNome"),
-    @NamedQuery(name = "Aluno.findByNrDevendo", query = "SELECT a FROM Aluno a WHERE a.nrDevendo = :nrDevendo"),
     @NamedQuery(name = "Aluno.findByDsContato", query = "SELECT a FROM Aluno a WHERE a.dsContato = :dsContato")})
 public class Aluno implements Serializable {
 
@@ -47,10 +46,6 @@ public class Aluno implements Serializable {
     @Size(min = 1, max = 250)
     @Column(name = "nm_nome")
     private String nmNome;
-    
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-    @Column(name = "nr_devendo")
-    private Float nrDevendo;
     
     @Basic(optional = false)
     @NotNull
@@ -88,14 +83,6 @@ public class Aluno implements Serializable {
 
     public void setNmNome(String nmNome) {
         this.nmNome = nmNome;
-    }
-
-    public Float getNrDevendo() {
-        return nrDevendo;
-    }
-
-    public void setNrDevendo(Float nrDevendo) {
-        this.nrDevendo = nrDevendo;
     }
 
     public String getDsContato() {

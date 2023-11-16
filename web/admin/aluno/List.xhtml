@@ -58,13 +58,6 @@
                             <h:outputText value="#{item.nmNome}"/>
                         </p:column>
 
-                        <p:column sortBy="#{item.nrDevendo}" filterBy="#{item.nrDevendo}" filterMatchMode="exact">
-                            <f:facet name="header">
-                                <h:outputText value="#{bundle.ListAlunoTitle_nrDevendo}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.nrDevendo}"/>
-                        </p:column>
-
                         <p:column sortBy="#{item.dsContato}" filterBy="#{item.dsContato}" filterMatchMode="contains">
                             <f:facet name="header">
                                 <h:outputText value="#{bundle.ListAlunoTitle_dsContato}"/>
@@ -108,10 +101,7 @@
                 <h:panelGroup id="display">
                     <h:panelGrid columns="2" rendered="#{alunoController.selected != null}">
                         <p:outputLabel value="#{bundle.CreateAlunoLabel_nmNome}" for="nmNome" />
-                        <p:inputText id="nmNome" value="#{alunoController.selected.nmNome}" title="#{bundle.CreateAlunoTitle_nmNome}" required="true" requiredMessage="#{bundle.CreateAlunoRequiredMessage_nmNome}"/>
-                        
-                        <p:outputLabel value="#{bundle.CreateAlunoLabel_nrDevendo}" for="nrDevendo" />
-                        <p:inputText id="nrDevendo" value="#{alunoController.selected.nrDevendo}" title="#{bundle.CreateAlunoTitle_nrDevendo}" />
+                        <p:inputText id="nmNome" value="#{alunoController.selected.nmNome}" title="#{bundle.CreateAlunoTitle_nmNome}" required="true" requiredMessage="#{bundle.CreateAlunoRequiredMessage_nmNome}"/>                                              
                         
                         <p:outputLabel value="#{bundle.CreateAlunoLabel_dsContato}" for="dsContato" />
                         <p:inputText id="dsContato" value="#{alunoController.selected.dsContato}" title="#{bundle.CreateAlunoTitle_dsContato}" required="true" requiredMessage="#{bundle.CreateAlunoRequiredMessage_dsContato}"/>
@@ -132,10 +122,7 @@
                         <p:inputText id="cdAluno" value="#{alunoController.selected.cdAluno}" title="#{bundle.EditAlunoTitle_cdAluno}" required="true" requiredMessage="#{bundle.EditAlunoRequiredMessage_cdAluno}" disabled="true"/>
                         
                         <p:outputLabel value="#{bundle.EditAlunoLabel_nmNome}" for="nmNome" />
-                        <p:inputText id="nmNome" value="#{alunoController.selected.nmNome}" title="#{bundle.EditAlunoTitle_nmNome}" required="true" requiredMessage="#{bundle.EditAlunoRequiredMessage_nmNome}"/>
-                        
-                        <p:outputLabel value="#{bundle.EditAlunoLabel_nrDevendo}" for="nrDevendo" />
-                        <p:inputText id="nrDevendo" value="#{alunoController.selected.nrDevendo}" title="#{bundle.EditAlunoTitle_nrDevendo}" />
+                        <p:inputText id="nmNome" value="#{alunoController.selected.nmNome}" title="#{bundle.EditAlunoTitle_nmNome}" required="true" requiredMessage="#{bundle.EditAlunoRequiredMessage_nmNome}"/>                                               
                         
                         <p:outputLabel value="#{bundle.EditAlunoLabel_dsContato}" for="dsContato" />
                         <p:inputText id="dsContato" value="#{alunoController.selected.dsContato}" title="#{bundle.EditAlunoTitle_dsContato}" required="true" requiredMessage="#{bundle.EditAlunoRequiredMessage_dsContato}"/>
@@ -156,10 +143,7 @@
                         <h:outputText value="#{alunoController.selected.cdAluno}" title="#{bundle.ViewAlunoTitle_cdAluno}"/>
                         
                         <h:outputText value="#{bundle.ViewAlunoLabel_nmNome}"/>
-                        <h:outputText value="#{alunoController.selected.nmNome}" title="#{bundle.ViewAlunoTitle_nmNome}"/>
-                        
-                        <h:outputText value="#{bundle.ViewAlunoLabel_nrDevendo}"/>
-                        <h:outputText value="#{alunoController.selected.nrDevendo}" title="#{bundle.ViewAlunoTitle_nrDevendo}"/>
+                        <h:outputText value="#{alunoController.selected.nmNome}" title="#{bundle.ViewAlunoTitle_nmNome}"/>                       
                         
                         <h:outputText value="#{bundle.ViewAlunoLabel_dsContato}"/>
                         <h:outputText value="#{alunoController.selected.dsContato}" title="#{bundle.ViewAlunoTitle_dsContato}"/>

@@ -94,7 +94,8 @@
                 <h:panelGroup id="display">
                     <h:panelGrid columns="2" rendered="#{generoController.selected != null}">                        
                         <p:outputLabel value="#{bundle.CreateGeneroLabel_dsDescricao}" for="dsDescricao" />
-                        <p:inputText id="dsDescricao" value="#{generoController.selected.dsDescricao}" title="#{bundle.CreateGeneroTitle_dsDescricao}" required="true" requiredMessage="#{bundle.CreateGeneroRequiredMessage_dsDescricao}"/>
+                        <p:inputText id="dsDescricao" value="#{generoController.selected.dsDescricao}" title="#{bundle.CreateGeneroTitle_dsDescricao}" size="48"
+                                     required="true" requiredMessage="#{bundle.CreateGeneroRequiredMessage_dsDescricao}"/>
                     </h:panelGrid>
                     <p:commandButton actionListener="#{generoController.create}" action="${generoController.clearAllFilters()}" icon="fa fa-save" value="#{bundle.Save}" update="display,:GeneroListForm:datalist,:growl,GeneroListForm:bdcGenero" oncomplete="handleSubmit(args,'GeneroCreateDialog');"/>
                     <p:commandButton actionListener="#{generoController.cancelar()}" action="#{generoController.clearAllFilters()}" immediate="true" value="#{bundle.Cancel}" icon="fa fa-close" onclick="GeneroCreateDialog.hide()"/>
@@ -112,7 +113,8 @@
                         <p:inputText id="cdGenero" value="#{generoController.selected.cdGenero}" title="#{bundle.EditGeneroTitle_cdGenero}" required="true" requiredMessage="#{bundle.EditGeneroRequiredMessage_cdGenero}" disabled="true"/>
                         
                         <p:outputLabel value="#{bundle.EditGeneroLabel_dsDescricao}" for="dsDescricao" />
-                        <p:inputText id="dsDescricao" value="#{generoController.selected.dsDescricao}" title="#{bundle.EditGeneroTitle_dsDescricao}" required="true" requiredMessage="#{bundle.EditGeneroRequiredMessage_dsDescricao}"/>
+                        <p:inputText id="dsDescricao" value="#{generoController.selected.dsDescricao}" title="#{bundle.EditGeneroTitle_dsDescricao}" size="48"
+                                     required="true" requiredMessage="#{bundle.EditGeneroRequiredMessage_dsDescricao}"/>
                     </h:panelGrid>
                     <p:commandButton actionListener="#{generoController.update}" action="#{generoController.clearAllFilters()}" value="#{bundle.Save}" icon="fa fa-save" update="display,:GeneroListForm:datalist,:growl" oncomplete="handleSubmit(args, 'GeneroEditDialog');"/>
                     <p:commandButton actionListener="#{generoController.cancelar()}" action="#{generoController.clearAllFilters()}" immediate="true" value="#{bundle.Cancel}" icon="fa fa-close" onclick="GeneroEditDialog.hide()"/>

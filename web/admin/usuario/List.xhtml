@@ -50,6 +50,20 @@
                             </f:facet>
                             <h:outputText value="#{item.cdUsuario}"/>
                         </p:column>
+                        
+                        <p:column sortBy="#{item.nmNome}" filterBy="#{item.nmNome}" filterMatchMode="contains">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListUsuarioTitle_nmNome}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.nmNome}"/>
+                        </p:column>
+                        
+                        <p:column sortBy="#{item.cdTipoUsuario.dsDescricao}" filterBy="#{item.cdTipoUsuario.dsDescricao}">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListUsuarioTitle_cdTipoUsuario}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.cdTipoUsuario.dsDescricao}"/>
+                        </p:column>
 
                         <p:column sortBy="#{item.dsLogin}" filterBy="#{item.dsLogin}" filterMatchMode="contains">
                             <f:facet name="header">
@@ -63,28 +77,14 @@
                                 <h:outputText value="#{bundle.ListUsuarioTitle_dsSenha}"/>
                             </f:facet>
                             <h:outputText value="#{item.dsSenha}"/>
-                        </p:column>
-
-                        <p:column sortBy="#{item.nmNome}" filterBy="#{item.nmNome}" filterMatchMode="contains">
-                            <f:facet name="header">
-                                <h:outputText value="#{bundle.ListUsuarioTitle_nmNome}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.nmNome}"/>
-                        </p:column>
+                        </p:column>                        
 
                         <p:column sortBy="#{item.dsEmail}" filterBy="#{item.dsEmail}" filterMatchMode="contains">
                             <f:facet name="header">
                                 <h:outputText value="#{bundle.ListUsuarioTitle_dsEmail}"/>
                             </f:facet>
                             <h:outputText value="#{item.dsEmail}"/>
-                        </p:column>
-
-                        <p:column sortBy="#{item.cdTipoUsuario.dsDescricao}" filterBy="#{item.cdTipoUsuario.dsDescricao}">
-                            <f:facet name="header">
-                                <h:outputText value="#{bundle.ListUsuarioTitle_cdTipoUsuario}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.cdTipoUsuario.dsDescricao}"/>
-                        </p:column>
+                        </p:column>                        
 
                         <f:facet name="footer">
                             <p:commandButton id="createButton" icon="fa fa-plus"   value="#{bundle.Create}" actionListener="#{usuarioController.prepareCreate()}"
@@ -121,18 +121,6 @@
             <h:form id="UsuarioCreateForm">
                 <h:panelGroup id="display" rendered="#{usuarioController.selected != null}">
                     <h:panelGrid columns="2">
-                        <p:outputLabel value="#{bundle.CreateUsuarioLabel_dsLogin}" for="dsLogin" />
-                        <p:inputText id="dsLogin" value="#{usuarioController.selected.dsLogin}" title="#{bundle.CreateUsuarioTitle_dsLogin}" required="true" requiredMessage="#{bundle.CreateUsuarioRequiredMessage_dsLogin}"/>
-                        
-                        <p:outputLabel value="#{bundle.CreateUsuarioLabel_dsSenha}" for="dsSenha" />
-                        <p:inputText id="dsSenha" value="#{usuarioController.selected.dsSenha}" title="#{bundle.CreateUsuarioTitle_dsSenha}" required="true" requiredMessage="#{bundle.CreateUsuarioRequiredMessage_dsSenha}"/>
-                        
-                        <p:outputLabel value="#{bundle.CreateUsuarioLabel_nmNome}" for="nmNome" />
-                        <p:inputText id="nmNome" value="#{usuarioController.selected.nmNome}" title="#{bundle.CreateUsuarioTitle_nmNome}" required="true" requiredMessage="#{bundle.CreateUsuarioRequiredMessage_nmNome}"/>
-                        
-                        <p:outputLabel value="#{bundle.CreateUsuarioLabel_dsEmail}" for="dsEmail" />
-                        <p:inputText id="dsEmail" value="#{usuarioController.selected.dsEmail}" title="#{bundle.CreateUsuarioTitle_dsEmail}" required="true" requiredMessage="#{bundle.CreateUsuarioRequiredMessage_dsEmail}"/>
-                        
                         <p:outputLabel value="#{bundle.CreateUsuarioLabel_cdTipoUsuario}" for="cdTipoUsuario" />
                         <p:selectOneMenu id="cdTipoUsuario" value="#{usuarioController.selected.cdTipoUsuario}" required="true" requiredMessage="#{bundle.CreateUsuarioRequiredMessage_cdTipoUsuario}"
                                          filter="true" filterMatchMode="contains" panelStyle="width:180px">
@@ -141,6 +129,22 @@
                                            var="cdTipoUsuarioItem"
                                            itemValue="#{cdTipoUsuarioItem}"/>
                         </p:selectOneMenu>
+                        
+                        <p:outputLabel value="#{bundle.CreateUsuarioLabel_nmNome}" for="nmNome" />
+                        <p:inputText id="nmNome" value="#{usuarioController.selected.nmNome}" title="#{bundle.CreateUsuarioTitle_nmNome}" size="48" 
+                                     required="true" requiredMessage="#{bundle.CreateUsuarioRequiredMessage_nmNome}"/>
+                        
+                        <p:outputLabel value="#{bundle.CreateUsuarioLabel_dsEmail}" for="dsEmail" />
+                        <p:inputText id="dsEmail" value="#{usuarioController.selected.dsEmail}" title="#{bundle.CreateUsuarioTitle_dsEmail}" size="48"
+                                     required="true" requiredMessage="#{bundle.CreateUsuarioRequiredMessage_dsEmail}"/>
+                        
+                        <p:outputLabel value="#{bundle.CreateUsuarioLabel_dsLogin}" for="dsLogin" />
+                        <p:inputText id="dsLogin" value="#{usuarioController.selected.dsLogin}" title="#{bundle.CreateUsuarioTitle_dsLogin}" 
+                                     required="true" requiredMessage="#{bundle.CreateUsuarioRequiredMessage_dsLogin}"/>
+                        
+                        <p:outputLabel value="#{bundle.CreateUsuarioLabel_dsSenha}" for="dsSenha" />
+                        <p:password id="dsSenha" value="#{usuarioController.selected.dsSenha}" title="#{bundle.CreateUsuarioTitle_dsSenha}" feedback="true" 
+                                     required="true" requiredMessage="#{bundle.CreateUsuarioRequiredMessage_dsSenha}"/>                                               
                     </h:panelGrid>
                     <p:commandButton actionListener="#{usuarioController.create}" action="${usuarioController.clearAllFilters()}" icon="fa fa-save" value="#{bundle.Save}" update="display,:UsuarioListForm:datalist,:growl,UsuarioListForm:bdcUsuario" oncomplete="handleSubmit(args,'UsuarioCreateDialog');"/>
                     <p:commandButton actionListener="#{usuarioController.cancelar()}" action="#{usuarioController.clearAllFilters()}" immediate="true" value="#{bundle.Cancel}" icon="fa fa-close" onclick="UsuarioCreateDialog.hide()"/>
@@ -157,18 +161,6 @@
                         <p:outputLabel value="#{bundle.EditUsuarioLabel_cdUsuario}" for="cdUsuario"/>
                         <p:inputText id="cdUsuario" value="#{usuarioController.selected.cdUsuario}" title="#{bundle.EditUsuarioTitle_cdUsuario}" required="true" requiredMessage="#{bundle.EditUsuarioRequiredMessage_cdUsuario}" disabled="true"/>
                         
-                        <p:outputLabel value="#{bundle.EditUsuarioLabel_dsLogin}" for="dsLogin" />
-                        <p:inputText id="dsLogin" value="#{usuarioController.selected.dsLogin}" title="#{bundle.EditUsuarioTitle_dsLogin}" required="true" requiredMessage="#{bundle.EditUsuarioRequiredMessage_dsLogin}"/>
-                        
-                        <p:outputLabel value="#{bundle.EditUsuarioLabel_dsSenha}" for="dsSenha" />
-                        <p:inputText id="dsSenha" value="#{usuarioController.selected.dsSenha}" title="#{bundle.EditUsuarioTitle_dsSenha}" required="true" requiredMessage="#{bundle.EditUsuarioRequiredMessage_dsSenha}"/>
-                        
-                        <p:outputLabel value="#{bundle.EditUsuarioLabel_nmNome}" for="nmNome" />
-                        <p:inputText id="nmNome" value="#{usuarioController.selected.nmNome}" title="#{bundle.EditUsuarioTitle_nmNome}" required="true" requiredMessage="#{bundle.EditUsuarioRequiredMessage_nmNome}"/>
-                        
-                        <p:outputLabel value="#{bundle.EditUsuarioLabel_dsEmail}" for="dsEmail" />
-                        <p:inputText id="dsEmail" value="#{usuarioController.selected.dsEmail}" title="#{bundle.EditUsuarioTitle_dsEmail}" required="true" requiredMessage="#{bundle.EditUsuarioRequiredMessage_dsEmail}"/>
-                        
                         <p:outputLabel value="#{bundle.EditUsuarioLabel_cdTipoUsuario}" for="cdTipoUsuario" />
                         <p:selectOneMenu id="cdTipoUsuario" value="#{usuarioController.selected.cdTipoUsuario}" required="true" requiredMessage="#{bundle.EditUsuarioRequiredMessage_cdTipoUsuario}"
                                          filter="true" filterMatchMode="contains" panelStyle="width:180px">
@@ -177,6 +169,22 @@
                                            var="cdTipoUsuarioItem"
                                            itemValue="#{cdTipoUsuarioItem}"/>
                         </p:selectOneMenu>
+                        
+                        <p:outputLabel value="#{bundle.EditUsuarioLabel_nmNome}" for="nmNome" />
+                        <p:inputText id="nmNome" value="#{usuarioController.selected.nmNome}" title="#{bundle.EditUsuarioTitle_nmNome}" size="48"
+                                     required="true" requiredMessage="#{bundle.EditUsuarioRequiredMessage_nmNome}"/>
+                        
+                        <p:outputLabel value="#{bundle.EditUsuarioLabel_dsEmail}" for="dsEmail" />
+                        <p:inputText id="dsEmail" value="#{usuarioController.selected.dsEmail}" title="#{bundle.EditUsuarioTitle_dsEmail}" size="48" 
+                                     required="true" requiredMessage="#{bundle.EditUsuarioRequiredMessage_dsEmail}"/>
+                        
+                        <p:outputLabel value="#{bundle.EditUsuarioLabel_dsLogin}" for="dsLogin" />
+                        <p:inputText id="dsLogin" value="#{usuarioController.selected.dsLogin}" title="#{bundle.EditUsuarioTitle_dsLogin}" 
+                                     required="true" requiredMessage="#{bundle.EditUsuarioRequiredMessage_dsLogin}"/>
+                        
+                        <p:outputLabel value="#{bundle.EditUsuarioLabel_dsSenha}" for="dsSenha" />
+                        <p:password id="dsSenha" value="#{usuarioController.selected.dsSenha}" title="#{bundle.EditUsuarioTitle_dsSenha}" feedback="true" 
+                                     required="true" requiredMessage="#{bundle.EditUsuarioRequiredMessage_dsSenha}"/>
                     </h:panelGrid>
                     <p:commandButton actionListener="#{usuarioController.update}" action="#{usuarioController.clearAllFilters()}" value="#{bundle.Save}" icon="fa fa-save" update="display,:UsuarioListForm:datalist,:growl" oncomplete="handleSubmit(args, 'UsuarioEditDialog');"/>
                     <p:commandButton actionListener="#{usuarioController.cancelar()}" action="#{usuarioController.clearAllFilters()}" immediate="true" value="#{bundle.Cancel}" icon="fa fa-close" onclick="UsuarioEditDialog.hide()"/>
@@ -193,20 +201,20 @@
                         <h:outputText value="#{bundle.ViewUsuarioLabel_cdUsuario}"/>
                         <h:outputText value="#{usuarioController.selected.cdUsuario}" title="#{bundle.ViewUsuarioTitle_cdUsuario}"/>
                         
-                        <h:outputText value="#{bundle.ViewUsuarioLabel_dsLogin}"/>
-                        <h:outputText value="#{usuarioController.selected.dsLogin}" title="#{bundle.ViewUsuarioTitle_dsLogin}"/>
-                        
-                        <h:outputText value="#{bundle.ViewUsuarioLabel_dsSenha}"/>
-                        <h:outputText value="#{usuarioController.selected.dsSenha}" title="#{bundle.ViewUsuarioTitle_dsSenha}"/>
+                        <h:outputText value="#{bundle.ViewUsuarioLabel_cdTipoUsuario}"/>
+                        <h:outputText value="#{usuarioController.selected.cdTipoUsuario.dsDescricao}" title="#{bundle.ViewUsuarioTitle_cdTipoUsuario}"/>
                         
                         <h:outputText value="#{bundle.ViewUsuarioLabel_nmNome}"/>
                         <h:outputText value="#{usuarioController.selected.nmNome}" title="#{bundle.ViewUsuarioTitle_nmNome}"/>
                         
                         <h:outputText value="#{bundle.ViewUsuarioLabel_dsEmail}"/>
-                        <h:outputText value="#{usuarioController.selected.dsEmail}" title="#{bundle.ViewUsuarioTitle_dsEmail}"/>
+                        <h:outputText value="#{usuarioController.selected.dsEmail}" title="#{bundle.ViewUsuarioTitle_dsEmail}"/>                                               
                         
-                        <h:outputText value="#{bundle.ViewUsuarioLabel_cdTipoUsuario}"/>
-                        <h:outputText value="#{usuarioController.selected.cdTipoUsuario.dsDescricao}" title="#{bundle.ViewUsuarioTitle_cdTipoUsuario}"/>
+                        <h:outputText value="#{bundle.ViewUsuarioLabel_dsLogin}"/>
+                        <h:outputText value="#{usuarioController.selected.dsLogin}" title="#{bundle.ViewUsuarioTitle_dsLogin}"/>
+                        
+                        <h:outputText value="#{bundle.ViewUsuarioLabel_dsSenha}"/>
+                        <h:outputText value="#{usuarioController.selected.dsSenha}" title="#{bundle.ViewUsuarioTitle_dsSenha}"/>
                     </p:panelGrid>
                     <p:commandButton immediate="true" value="#{bundle.Close}" icon="fa fa-close" onclick="UsuarioViewDialog.hide()"/>
                 </h:panelGroup>

@@ -92,10 +92,11 @@
         <p:dialog id="TipoUsuarioCreateDlg" widgetVar="TipoUsuarioCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.CreateTipoUsuarioTitle}">
             <h:form id="TipoUsuarioCreateForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" rendered="#{tipoUsuarioController.selected != null}">
+                    <h:panelGrid columns="2" rendered="#{tipoUsuarioController.selected != null}">
                         <p:outputLabel value="#{bundle.CreateTipoUsuarioLabel_dsDescricao}" for="dsDescricao" />
-                        <p:inputText id="dsDescricao" value="#{tipoUsuarioController.selected.dsDescricao}" title="#{bundle.CreateTipoUsuarioTitle_dsDescricao}" required="true" requiredMessage="#{bundle.CreateTipoUsuarioRequiredMessage_dsDescricao}"/>
-                    </p:panelGrid>
+                        <p:inputText id="dsDescricao" value="#{tipoUsuarioController.selected.dsDescricao}" title="#{bundle.CreateTipoUsuarioTitle_dsDescricao}" size="48"
+                                     required="true" requiredMessage="#{bundle.CreateTipoUsuarioRequiredMessage_dsDescricao}"/>
+                    </h:panelGrid>
                     <p:commandButton actionListener="#{tipoUsuarioController.create}" action="${tipoUsuarioController.clearAllFilters()}" icon="fa fa-save" value="#{bundle.Save}" update="display,:TipoUsuarioListForm:datalist,:growl,TipoUsuarioListForm:bdcTipoUsuario" oncomplete="handleSubmit(args,'TipoUsuarioCreateDialog');"/>
                     <p:commandButton actionListener="#{tipoUsuarioController.cancelar()}" action="#{tipoUsuarioController.clearAllFilters()}" immediate="true" value="#{bundle.Cancel}" icon="fa fa-close" onclick="TipoUsuarioCreateDialog.hide()"/>
                 </h:panelGroup>
@@ -107,13 +108,14 @@
         <p:dialog id="TipoUsuarioEditDlg" widgetVar="TipoUsuarioEditDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.EditTipoUsuarioTitle}">
             <h:form id="TipoUsuarioEditForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" rendered="#{tipoUsuarioController.selected != null}">
+                    <h:panelGrid columns="2" rendered="#{tipoUsuarioController.selected != null}">
                         <p:outputLabel value="#{bundle.EditTipoUsuarioLabel_cdTipoUsuario}" for="cdTipoUsuario" />
                         <p:inputText id="cdTipoUsuario" value="#{tipoUsuarioController.selected.cdTipoUsuario}" title="#{bundle.EditTipoUsuarioTitle_cdTipoUsuario}" required="true" requiredMessage="#{bundle.EditTipoUsuarioRequiredMessage_cdTipoUsuario}" disabled="true"/>
                         
                         <p:outputLabel value="#{bundle.EditTipoUsuarioLabel_dsDescricao}" for="dsDescricao" />
-                        <p:inputText id="dsDescricao" value="#{tipoUsuarioController.selected.dsDescricao}" title="#{bundle.EditTipoUsuarioTitle_dsDescricao}" required="true" requiredMessage="#{bundle.EditTipoUsuarioRequiredMessage_dsDescricao}"/>
-                    </p:panelGrid>
+                        <p:inputText id="dsDescricao" value="#{tipoUsuarioController.selected.dsDescricao}" title="#{bundle.EditTipoUsuarioTitle_dsDescricao}" size="48"
+                                     required="true" requiredMessage="#{bundle.EditTipoUsuarioRequiredMessage_dsDescricao}"/>
+                    </h:panelGrid>
                     <p:commandButton actionListener="#{tipoUsuarioController.update}" action="#{tipoUsuarioController.clearAllFilters()}" value="#{bundle.Save}" icon="fa fa-save" update="display,:TipoUsuarioListForm:datalist,:growl" oncomplete="handleSubmit(args, 'TipoUsuarioEditDialog');"/>
                     <p:commandButton actionListener="#{tipoUsuarioController.cancelar()}" action="#{tipoUsuarioController.clearAllFilters()}" immediate="true" value="#{bundle.Cancel}" icon="fa fa-close" onclick="TipoUsuarioEditDialog.hide()"/>
                 </h:panelGroup>

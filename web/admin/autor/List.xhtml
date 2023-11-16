@@ -103,7 +103,8 @@
                 <h:panelGroup id="display">
                     <h:panelGrid columns="2" rendered="#{autorController.selected != null}">
                         <p:outputLabel value="#{bundle.CreateAutorLabel_nmNome}" for="nmNome" />
-                        <p:inputText id="nmNome" value="#{autorController.selected.nmNome}" title="#{bundle.CreateAutorTitle_nmNome}" required="true" requiredMessage="#{bundle.CreateAutorRequiredMessage_nmNome}"/>
+                        <p:inputText id="nmNome" value="#{autorController.selected.nmNome}" title="#{bundle.CreateAutorTitle_nmNome}" size="48"
+                                     required="true" requiredMessage="#{bundle.CreateAutorRequiredMessage_nmNome}"/>
                         
                         <p:outputLabel value="#{bundle.CreateAutorLabel_dtNascimento}" for="dtNascimento" />
                         <p:calendar id="dtNascimento" pattern="dd/MM/yyyy" value="#{autorController.selected.dtNascimento}" title="#{bundle.CreateAutorTitle_dtNascimento}" required="true" requiredMessage="#{bundle.CreateAutorRequiredMessage_dtNascimento}" showOn="button"/>
@@ -124,7 +125,8 @@
                         <p:inputText id="cdAutor" value="#{autorController.selected.cdAutor}" title="#{bundle.EditAutorTitle_cdAutor}" required="true" requiredMessage="#{bundle.EditAutorRequiredMessage_cdAutor}" disabled="true"/>
                         
                         <p:outputLabel value="#{bundle.EditAutorLabel_nmNome}" for="nmNome" />
-                        <p:inputText id="nmNome" value="#{autorController.selected.nmNome}" title="#{bundle.EditAutorTitle_nmNome}" required="true" requiredMessage="#{bundle.EditAutorRequiredMessage_nmNome}"/>
+                        <p:inputText id="nmNome" value="#{autorController.selected.nmNome}" title="#{bundle.EditAutorTitle_nmNome}" size="48"
+                                     required="true" requiredMessage="#{bundle.EditAutorRequiredMessage_nmNome}"/>
                         
                         <p:outputLabel value="#{bundle.EditAutorLabel_dtNascimento}" for="dtNascimento" />
                         <p:calendar id="dtNascimento" pattern="dd/MM/yyyy" value="#{autorController.selected.dtNascimento}" title="#{bundle.EditAutorTitle_dtNascimento}" required="true" requiredMessage="#{bundle.EditAutorRequiredMessage_dtNascimento}" showOn="button"/>
