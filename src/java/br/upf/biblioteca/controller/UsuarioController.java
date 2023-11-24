@@ -1,13 +1,19 @@
 package br.upf.biblioteca.controller;
 
+import br.upf.biblioteca.controller.enumeration.UsuariopermissaoacessoEnumController;
 import br.upf.biblioteca.entity.Usuario;
 import br.upf.biblioteca.controller.util.JsfUtil;
 import br.upf.biblioteca.controller.util.JsfUtil.PersistAction;
 import br.upf.biblioteca.facade.UsuarioFacade;
 import br.upf.biblioteca.service.CommonService;
-
+import br.upf.biblioteca.util.Util;
+import br.upf.biblioteca.util.UtilSession;
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,6 +25,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import javax.faces.model.SelectItem;
 import org.primefaces.PrimeFaces;
 import org.primefaces.component.datatable.DataTable;
 import org.primefaces.event.ToggleEvent;
@@ -30,13 +37,17 @@ public class UsuarioController implements Serializable {
 
     @EJB
     private br.upf.biblioteca.facade.UsuarioFacade ejbFacade;
-    
+
     private List<Usuario> items = null;
     private Usuario selected;
     private List<Usuario> filteredUsuario;
     private List<Boolean> listIsTrue;
-    
+
+    private Date minDateRecSenha;
+    private Date maxDateRecSenha;
+
     private final CommonService commonService = new CommonService();
+    private final UtilSession utilSession = new UtilSession();
 
     public UsuarioController() {
     }
@@ -130,7 +141,7 @@ public class UsuarioController implements Serializable {
     public List<Usuario> getItemsAvailableSelectOne() {
         return getFacade().findAll();
     }
-    
+
     public List<Usuario> getFilteredUsuario() {
         return filteredUsuario;
     }
@@ -138,10 +149,10 @@ public class UsuarioController implements Serializable {
     public void setFilteredUsuario(List<Usuario> filteredUsuario) {
         this.filteredUsuario = filteredUsuario;
     }
-    
+
     /**
-     * Buscar todos os registros, ordenando por nome. Utilizando as regras
-     * para buscar os dados novamente na base de dados.
+     * Buscar todos os registros, ordenando por nome. Utilizando as regras para
+     * buscar os dados novamente na base de dados.
      *
      * @param isReload
      * @return
@@ -178,6 +189,48 @@ public class UsuarioController implements Serializable {
     public void cancelar() {
         selected = null;
         items = null;
+    }
+    
+    /**
+     * Método que busca o usuário logado que esta na sessão.
+     *
+     * @return Pessoa
+     */
+    public Usuario getUsuarioLogado() {
+        return utilSession.getUsuarioLogado();
+    }
+
+    /**
+     * @return the minDate p/ Recuperar Senha
+     */
+    public Date getMinDateRecSenha() {
+        minDateRecSenha = Util.buscarDataAPartirDataAtual(-36500).getTime();
+        return minDateRecSenha;
+    }
+
+    /**
+     * @return the maxDate p/ Recuperar Senha
+     */
+    public Date getMaxDateRecSenha() {
+        maxDateRecSenha = Util.buscarDataAPartirDataAtual(0).getTime();
+        return maxDateRecSenha;
+    }
+    
+    public String formatarPermissao(Usuario usuario) {
+        String permissaoRetorno = "";
+        if (usuario != null && usuario.getUsrPermissaoacesso() != null && !usuario.getUsrPermissaoacesso().isEmpty()) {
+            Map<String, String> permissaoMap = new HashMap<>();
+            UsuariopermissaoacessoEnumController usuariopermissaoacessoEnumController = new UsuariopermissaoacessoEnumController();
+            SelectItem[] listaPermissoes = usuariopermissaoacessoEnumController.getPermissoes();
+            List<SelectItem> lista = Arrays.asList(listaPermissoes);
+            for (int i = 0; i < lista.size(); i++) {
+                if (usuario.getUsrPermissaoacesso().equals(lista.get(i).getValue().toString())) {
+                    permissaoMap.put(lista.get(i).getValue().toString(), lista.get(i).getLabel());
+                    permissaoRetorno = permissaoMap.get(usuario.getUsrPermissaoacesso());
+                }
+            }
+        }
+        return permissaoRetorno;
     }
 
     @FacesConverter(forClass = Usuario.class)

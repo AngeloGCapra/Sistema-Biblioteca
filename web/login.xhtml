@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      lang="pt-BR">
+
+    <h:head>
+        <f:facet name="first">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+        </f:facet>
+        
+        <title>Sistema Bibliotecário</title>
+        <h:outputScript name="js/layout.js" library="manhattan-layout" />
+        <h:outputScript name="js/prism.js" library="manhattan-layout"/>
+        <h:outputScript name="js/nanoscroller.js" library="manhattan-layout" />
+        <h:outputScript name="js/jsfcrud.js" library="manhattan-layout" />
+        <h:outputScript name="js/calendar.js" library="manhattan-layout" />
+        <h:outputScript name="js/locale.js" library="manhattan-layout" />
+    </h:head>
+
+    <h:body styleClass="login-body login-body-biblio">
+        <style type="text/css">
+            .label {
+                width:20%;
+                padding:4px;
+            }
+
+            .value {
+                width:80%;
+                padding:1px;
+            }
+
+            .grid {
+                width:100%;
+            }
+
+            .error {
+                color: red;
+            }
+
+            .outputLabel {
+                font-weight: bold;
+            }
+
+            .grid {
+                width:33%;
+                padding:4px;
+                margin: 10px;
+            }
+
+            .panelStyle{
+                width: 850px;
+            }
+
+            .show {
+                display: block;
+            }
+
+            .hide {
+                display: none;
+            }
+
+            .login-body .login-panel .ui-g-12.container {
+                margin-bottom: 0px !important;
+            }
+
+            .login-body .login-panel .ui-g-12 {
+                padding-bottom: 0px !important;
+            }
+
+            .login-body .login-panel .left-side {
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+                padding-top: 0 !important;
+                padding-bottom: 0 !important;
+            }
+
+            .value2 {
+                width:65%;
+                padding:7px;
+            }
+
+            body .ui-fieldset .ui-fieldset-content {
+                padding: 12px 24px !important;
+            }
+
+            .ui-panelgrid>*>tr,
+            .ui-panelgrid .ui-panelgrid-cell{
+                border: none !important;
+            }
+
+            .login-body .login-panel label {
+                margin-top: 0px !important;
+            }
+
+            .ui-g-1, .ui-g-2, .ui-g-3, .ui-g-4, .ui-g-5, .ui-g-6, .ui-g-7, .ui-g-8, .ui-g-9, .ui-g-10, .ui-g-11, .ui-g-12 {
+                padding-left: 1.3em !important;
+                padding-right: 1.3em !important;
+            }
+        </style>
+
+        <p:growl id="growl"  life="20000" />
+
+        <div class="login-panel login-panel-biblio ui-fluid">
+            <div class="ui-g">
+                <!--Imagem de login-->
+                <div class="ui-g-6 left-side">
+                    <p:graphicImage name="images/login/login-biblio2.jpg" library="manhattan-layout" styleClass="login-image login-image-biblio" />
+                </div>
+                
+                <div class="ui-g-6 ui-sm-12">
+                    <h:form id="loginForm">
+                        <br></br>
+                        <!--Imagem da logo-->
+                        <div class="ui-g-12 ui-sm-12">
+                            <p:graphicImage name="images/logo-bibliogister.png" library="manhattan-layout" styleClass="login-image" />
+                        </div>
+
+                        <div class="ui-g-12 container">
+                            <br />
+                        </div>
+
+                        <div class="login-email">
+                            <p:outputLabel value="Digite seu E-mail ou Login: " />
+                            <div class="input-wrapper ui-input-icon-left">
+                                <i class="fa fa-id-card"/>
+                                <p:inputText id="usrEmailOuUsrLogin"  value="#{usuarioAcessoController.loginOrEmail}" 
+                                             title="#{bundle.CreateUsuarioTitle_usrEmailOuLogin}" autocomplete="off" 
+                                             required="true" requiredMessage="#{bundle.CreateUsuarioRequiredMessage_usrEmailOuLogin}" 
+                                             placeholder="E-mail ou Login"/>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <p:outputLabel value="Digite sua Senha: "/>
+                            <div class="input-wrapper ui-input-icon-left">
+                                <i class="pi pi-lock"/>
+                                <p:password id="usrSenha" value="#{usuarioAcessoController.selected.dsSenha}" 
+                                            title="#{bundle.CreateUsuarioTitle_dsSenha}" autocomplete="off"
+                                            required="true" requiredMessage="#{bundle.CreateUsuarioRequiredMessage_dsSenha}"
+                                            placeholder="Senha" />
+                            </div>
+                        </div>
+                        <div class="col-12 button-container">
+                            <p:commandButton id="btnAcessar" action="#{usuarioAcessoController.autenticarUsuario()}" value="#{bundle.Login}" update="growl" styleClass="ui-button-raised" />
+                        </div>
+                        <div class="col-12" style="text-align: center">
+                            <p:commandLink id="recuperaSenhaButton" value="Esqueci Minha Senha" update=":UsuarioRecuperaSenhaForm" actionListener="#{usuarioAcessoController.prepareNewPassword()}" oncomplete="PF('UsuarioRecuperaSenhaDialog').show()"/>
+                        </div>
+                        <div class="col-12">                            
+                            <p:outputPanel style="text-align:center;">
+                                <p:outputLabel value="#{bundle.Version}" style="font-size: 12px !important;"/>
+                            </p:outputPanel>
+                        </div>
+                    </h:form>     
+                </div>
+            </div>
+        </div>
+
+
+        <!--Inicio do diálogo de Recuperação de Senha-->
+        <p:dialog id="UsuarioRecuperaSenhaDlg" widgetVar="UsuarioRecuperaSenhaDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.EditUsuarioSenhaForm}" showEffect="blind" hideEffect="blind">
+            <h:form id="UsuarioRecuperaSenhaForm">
+                <h:panelGroup id="display">
+                    <h:panelGrid columns="2">
+                        <p:outputLabel value="#{bundle.CreateUsuarioLabel_dsEmail}" for="dsEmail" />
+                        <p:inputText id="dsEmail" value="#{usuarioAcessoController.selectedUsuario.dsEmail}" size="35" title="#{bundle.CreateUsuarioTitle_dsEmail}" required="true" requiredMessage="#{bundle.CreateUsuarioRequiredMessage_dsEmail}"/>
+
+                        <p:outputLabel value="#{bundle.CreateUsuarioLabel_usrDatanascimento}" for="usrDatanascimento" />
+                        <p:calendar id="usrDatanascimento" pattern="dd/MM/yyyy" mask="true" locale="pt" 
+                                    mindate="#{usuarioController.minDateRecSenha}" required="true"  requiredMessage="#{bundle.EditUsuarioRequiredMessage_usrDatanascimento}" showOn="button"
+                                    maxdate="#{usuarioController.maxDateRecSenha}" value="#{usuarioAcessoController.selectedUsuario.usrDatanascimento}" title="#{bundle.EditUsuarioTitle_usrDatanascimento}" />
+                    </h:panelGrid>
+                    <p:commandButton action="#{usuarioAcessoController.createNewPassword()}" value="#{bundle.EditButtonSave}"  update="display,:growl,:UsuarioRecuperaSenhaForm" oncomplete="handleSubmit(args,'UsuarioRecuperaSenhaDialog');"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+        <!--Fim do diálogo de Recuperação de Senha-->
+
+        <h:outputStylesheet library="webjars" name="font-awesome/6.4.0/css/all.min-jsf.css" />
+        <h:outputStylesheet library="webjars" name="font-awesome/6.4.0/css/v4-shims.min-jsf.css" />
+        <h:outputStylesheet name="css/primeicons.css" library="manhattan-layout"/>
+        <h:outputStylesheet name="css/primeflex.min.css" library="manhattan-layout"/>
+        <h:outputStylesheet name="css/jsfcrud.css" library="manhattan-layout" />
+        <h:outputStylesheet name="css/nanoscroller.css" library="manhattan-layout" />
+        <h:outputStylesheet name="css/layout-green-purple.css" library="manhattan-layout"/>
+        <h:outputStylesheet name="css/style.css" library="resources"/>
+    </h:body>
+
+</html>
