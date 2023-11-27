@@ -63,7 +63,7 @@ public class UsuarioAcessoController implements Serializable {
      */
     public String autenticarUsuario() {
         Usuario usuario;
-        //handleInput();
+        handleInput();
 
         if (loginPorDsLogin) {
             // Login por DsLogin
@@ -90,6 +90,7 @@ public class UsuarioAcessoController implements Serializable {
                     if (usuario.getUsrPermissaoacesso().equals("BIBLIOTECARIO")) {
                         session.setAttribute("logado-bibliotecario", true);
                     }
+                    
                     return processLoginSucess(usuario);
 
                 } else { // Caso o email ou senha seja incorreto
@@ -153,21 +154,17 @@ public class UsuarioAcessoController implements Serializable {
         }
     }
 
-//    public void handleInput() {
-//        if (loginOrEmail != null && !loginOrEmail.isEmpty()) {
-//            // Remove caracteres não numéricos para verificar o comprimento
-//            String numericValue = loginOrEmail.replaceAll("\\D", "");
-//
-//            if (numericValue.length() == 11) {
-//                setLoginPorDsLogin(true);
-//                // Formatar o login e colocar a máscara novamente para buscar no banco
-//                // Login no banco é salvo com Máscara
-//                setLoginOrEmail(Util.formatCPF(numericValue));
-//            } else {
-//                setLoginPorDsLogin(false);
-//            }
-//        }
-//    }
+    public void handleInput() {
+        if (loginOrEmail != null && !loginOrEmail.isEmpty()) {
+
+            // Se a string de login passada não possuir um caracter "@", será um login por DsLogin
+            if (!loginOrEmail.contains("@")) {
+                setLoginPorDsLogin(true);
+            } else {
+                setLoginPorDsLogin(false);
+            }
+        }
+    }
 
     /**
      * Método responsável por tratar os dados para gerar nova senha.

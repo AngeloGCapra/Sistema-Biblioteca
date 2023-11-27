@@ -4,8 +4,11 @@ import br.upf.biblioteca.controller.enumeration.UsuariopermissaoacessoEnumContro
 import br.upf.biblioteca.entity.Usuario;
 import br.upf.biblioteca.controller.util.JsfUtil;
 import br.upf.biblioteca.controller.util.JsfUtil.PersistAction;
+import br.upf.biblioteca.entity.TipoUsuario;
+import br.upf.biblioteca.entity.enumeration.UsuariopermissaoacessoEnum;
 import br.upf.biblioteca.facade.UsuarioFacade;
 import br.upf.biblioteca.service.CommonService;
+import br.upf.biblioteca.service.UsuarioService;
 import br.upf.biblioteca.util.Util;
 import br.upf.biblioteca.util.UtilSession;
 import java.io.Serializable;
@@ -38,15 +41,21 @@ public class UsuarioController implements Serializable {
     @EJB
     private br.upf.biblioteca.facade.UsuarioFacade ejbFacade;
 
+    @EJB
+    private br.upf.biblioteca.facade.TipoUsuarioFacade ejbTipoUsuarioFacade;
+
     private List<Usuario> items = null;
     private Usuario selected;
     private List<Usuario> filteredUsuario;
     private List<Boolean> listIsTrue;
 
+    private TipoUsuario tipoUsuario;
     private Date minDateRecSenha;
     private Date maxDateRecSenha;
+    private boolean sucessPersistencia = false;
 
     private final CommonService commonService = new CommonService();
+    private final UsuarioService usuarioService = new UsuarioService();
     private final UtilSession utilSession = new UtilSession();
 
     public UsuarioController() {
@@ -76,15 +85,149 @@ public class UsuarioController implements Serializable {
         return selected;
     }
 
+    public Usuario prepareCreateLogin() {
+        selected = new Usuario();
+        selected.setCdTipoUsuario(ejbTipoUsuarioFacade.find(3)); // Tipo usuario "3" = Professor
+        selected.setUsrPermissaoacesso(UsuariopermissaoacessoEnum.PROFESSOR.toString());
+
+        initializeEmbeddableKey();
+        return selected;
+    }
+
     public void create() {
-        persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("UsuarioCreated"));
+        String msgLog;
+        
+        // Se o campo de Email estiver vazio, usa o campo de Login parar setar um email
+        if (selected.getDsEmail() == null || selected.getDsEmail().equals("")) {
+            selected.setDsEmail(selected.getDsLogin() + "@gmail.com");
+        }
+
+        // Seta a senha com base na data de nascimento passada
+//        if (selected.getDsSenha() == null || selected.getDsSenha().equals("")) {
+//            selected.setDsSenha(Util.formatarData(selected.getUsrDatanascimento(), "ddMMyyyy"));
+//        }
+
+        // Verifica se o email cadastrado já foi utilizado...
+        if (ejbFacade.findByDsEmail(selected.getDsEmail()).getCdUsuario() == null) {
+            // Verifica se o login cadastrado já foi utilizado...
+            if (ejbFacade.findByDsLogin(selected.getDsLogin()).getCdUsuario() == null) {
+                if (usuarioService.validarTamanhoSenha(selected.getDsSenha())) { // Validando tamanho da senha...
+                    if (validarDatanascimento(selected.getUsrDatanascimento())) { // Validando login
+                        // Se o processo de criação ocorrer com sucesso...
+                        if (processCreate()) {
+                            selected = new Usuario();
+                            PrimeFaces current = PrimeFaces.current();
+                            current.executeScript("PF('UsuarioCreateDialog').hide();");
+                        }
+                    }
+                } else {
+                    msgLog = ResourceBundle.getBundle("/Bundle").getString("UsuarioTamanhoInvalidoMessage_usrSenha");
+                    JsfUtil.addAlertMessage(msgLog);
+                }
+            } else {
+                msgLog = ResourceBundle.getBundle("/Bundle").getString("CreateUsuarioMsgFail_LoginExistente");
+                JsfUtil.addAlertMessage(msgLog);
+            }
+        } else {
+            msgLog = ResourceBundle.getBundle("/Bundle").getString("CreateUsuarioMsgFail_EmailExistente");
+            JsfUtil.addAlertMessage(msgLog);
+        }
         if (!JsfUtil.isValidationFailed()) {
             items = null;    // Invalidate list of items to trigger re-query.
         }
     }
 
+    /**
+     * Executa o processo de criação.
+     *
+     * @return
+     */
+    private boolean processCreate() {
+        boolean sucessProcess = false;
+        selected = usuarioService.prepareCreate(selected);
+
+        persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("UsuarioCreated"));
+        if (sucessPersistencia) {
+            items = null;    // Invalidate listIsTrue of items to trigger re-query.
+
+            sucessProcess = true;
+        }
+        return sucessProcess;
+    }
+
+    /**
+     * Método responsável por validar se a datanascimento é anterior a data
+     * atual.
+     *
+     * @param datanascimento
+     * @return
+     */
+    private boolean validarDatanascimento(Date datanascimento) {
+        String msgLogDatanascimentoInvalida = ResourceBundle.getBundle("/Bundle").getString("UsuarioDatanascimentoInvalidoMessage_usrDatanascimento");
+        boolean isValid = false;
+        Date Dataatual = Util.buscarDataAtual();
+
+        if (datanascimento.before(Dataatual)) {
+            isValid = true;
+        } else {
+            JsfUtil.addErrorMessage(msgLogDatanascimentoInvalida);
+        }
+        return isValid;
+    }
+
     public void update() {
+        String msgLog;
+        
+        // Se o campo de Email estiver vazio, usa o campo de Login parar setar um email
+        if (selected.getDsEmail() == null || selected.getDsEmail().equals("")) {
+            selected.setDsEmail(selected.getDsLogin() + "@gmail.com");
+        }
+
+        // Seta a senha com base na data de nascimento passada
+//        if (selected.getDsSenha() == null || selected.getDsSenha().equals("")) {
+//            selected.setDsSenha(Util.formatarData(selected.getUsrDatanascimento(), "ddMMyyyy"));
+//        }
+
+        // Verifica se o email cadastrado já foi utilizado por outro usuário...
+        if (ejbFacade.findByDsEmail(selected.getDsEmail()).getCdUsuario() == null || ejbFacade.findByDsEmail(selected.getDsEmail()).getCdUsuario() == selected.getCdUsuario()) {
+            if (ejbFacade.findByDsLogin(selected.getDsLogin()).getCdUsuario() == null || ejbFacade.findByDsLogin(selected.getDsLogin()).getCdUsuario() == selected.getCdUsuario()) {
+                if (validarDatanascimento(selected.getUsrDatanascimento())) {
+                    // Se o processo de edição ocorrer com sucesso...
+                    if (processUpdate()) {
+                        PrimeFaces current = PrimeFaces.current();
+                        current.executeScript("PF('UsuarioEditDialog').hide();");
+                    }
+                }
+            } else {
+                msgLog = ResourceBundle.getBundle("/Bundle").getString("CreateUsuarioMsgFail_LoginExistente");
+                JsfUtil.addAlertMessage(msgLog);
+            }
+        } else {
+            msgLog = ResourceBundle.getBundle("/Bundle").getString("CreateUsuarioMsgFail_EmailExistente");
+            JsfUtil.addAlertMessage(msgLog);
+        }
+
+        if (!JsfUtil.isValidationFailed()) {
+            items = null;    // Invalidate list of items to trigger re-query.
+        }
+    }
+    
+    /**
+     * Executa o processo de edição.
+     *
+     * @return
+     */
+    private boolean processUpdate() {
+        boolean sucessProcess = false;
+        selected = usuarioService.prepareUpdate(selected);
+        
         persist(PersistAction.UPDATE, ResourceBundle.getBundle("/Bundle").getString("UsuarioUpdated"));
+        if (sucessPersistencia) {
+            items = null; // Invalidate listIsTrue of items to trigger re-query.
+            sucessProcess = true;
+        }
+        
+        return sucessProcess;
     }
 
     public void destroy() {
@@ -93,13 +236,6 @@ public class UsuarioController implements Serializable {
             selected = null; // Remove selection
             items = null;    // Invalidate list of items to trigger re-query.
         }
-    }
-
-    public List<Usuario> getItems() {
-        if (items == null) {
-            items = getFacade().findAll();
-        }
-        return items;
     }
 
     private void persist(PersistAction persistAction, String successMessage) {
@@ -130,26 +266,6 @@ public class UsuarioController implements Serializable {
         }
     }
 
-    public Usuario getUsuario(java.lang.Integer id) {
-        return getFacade().find(id);
-    }
-
-    public List<Usuario> getItemsAvailableSelectMany() {
-        return getFacade().findAll();
-    }
-
-    public List<Usuario> getItemsAvailableSelectOne() {
-        return getFacade().findAll();
-    }
-
-    public List<Usuario> getFilteredUsuario() {
-        return filteredUsuario;
-    }
-
-    public void setFilteredUsuario(List<Usuario> filteredUsuario) {
-        this.filteredUsuario = filteredUsuario;
-    }
-
     /**
      * Buscar todos os registros, ordenando por nome. Utilizando as regras para
      * buscar os dados novamente na base de dados.
@@ -162,14 +278,6 @@ public class UsuarioController implements Serializable {
             items = getFacade().findAllOrderByNome();
         }
         return items;
-    }
-
-    public List<Boolean> getListIsTrue() {
-        return listIsTrue;
-    }
-
-    public void setListIsTrue(List<Boolean> listIsTrue) {
-        this.listIsTrue = listIsTrue;
     }
 
     public void onToggle(ToggleEvent e) {
@@ -190,11 +298,11 @@ public class UsuarioController implements Serializable {
         selected = null;
         items = null;
     }
-    
+
     /**
      * Método que busca o usuário logado que esta na sessão.
      *
-     * @return Pessoa
+     * @return Usuario
      */
     public Usuario getUsuarioLogado() {
         return utilSession.getUsuarioLogado();
@@ -215,7 +323,7 @@ public class UsuarioController implements Serializable {
         maxDateRecSenha = Util.buscarDataAPartirDataAtual(0).getTime();
         return maxDateRecSenha;
     }
-    
+
     public String formatarPermissao(Usuario usuario) {
         String permissaoRetorno = "";
         if (usuario != null && usuario.getUsrPermissaoacesso() != null && !usuario.getUsrPermissaoacesso().isEmpty()) {
@@ -231,6 +339,49 @@ public class UsuarioController implements Serializable {
             }
         }
         return permissaoRetorno;
+    }
+
+    public List<Usuario> getItems() {
+        if (items == null) {
+            items = getFacade().findAll();
+        }
+        return items;
+    }
+
+    public List<Boolean> getListIsTrue() {
+        return listIsTrue;
+    }
+
+    public void setListIsTrue(List<Boolean> listIsTrue) {
+        this.listIsTrue = listIsTrue;
+    }
+
+    public Usuario getUsuario(java.lang.Integer id) {
+        return getFacade().find(id);
+    }
+
+    public List<Usuario> getItemsAvailableSelectMany() {
+        return getFacade().findAll();
+    }
+
+    public List<Usuario> getItemsAvailableSelectOne() {
+        return getFacade().findAll();
+    }
+
+    public List<Usuario> getFilteredUsuario() {
+        return filteredUsuario;
+    }
+
+    public void setFilteredUsuario(List<Usuario> filteredUsuario) {
+        this.filteredUsuario = filteredUsuario;
+    }
+
+    public TipoUsuario getTipoUsuario() {
+        return tipoUsuario;
+    }
+
+    public void setTipoUsuario(TipoUsuario tipoUsuario) {
+        this.tipoUsuario = tipoUsuario;
     }
 
     @FacesConverter(forClass = Usuario.class)

@@ -148,9 +148,7 @@
 
                         <p:outputLabel value="#{bundle.CreateUsuarioLabel_usrPermissaoacesso}" for="usrPermissaoacesso" />
                         <p:selectOneMenu id="usrPermissaoacesso" autoWidth="false" value="#{usuarioController.selected.usrPermissaoacesso}" 
-                                         required="true" requiredMessage="#{bundle.CreateUsuarioRequiredMessage_usrPermissao}"
-                                         disabled="#{usuarioController.usuarioLogado.usrPermissaoacesso != 'DIRETORIA'}"
-                                         >
+                                         required="true" requiredMessage="#{bundle.CreateUsuarioRequiredMessage_usrPermissao}">
                             <f:selectItem itemLabel="#{bundle.SelectOneMessage}"/>
                             <f:selectItems value="#{usuariopermissaoacessoEnumController.permissoes}"
                                            var="permissaoItem"
@@ -204,9 +202,7 @@
                         
                         <p:outputLabel value="#{bundle.EditUsuarioLabel_usrPermissaoacesso}" for="usrPermissaoacesso" />
                         <p:selectOneMenu id="usrPermissaoacesso" autoWidth="false" value="#{usuarioController.selected.usrPermissaoacesso}" 
-                                         required="true" requiredMessage="#{bundle.EditUsuarioRequiredMessage_usrPermissao}"
-                                         disabled="#{usuarioController.usuarioLogado.usrPermissaoacesso != 'DIRETORIA'}"
-                                         >
+                                         required="true" requiredMessage="#{bundle.EditUsuarioRequiredMessage_usrPermissao}">
                             <f:selectItem itemLabel="#{bundle.SelectOneMessage}"/>
                             <f:selectItems value="#{usuariopermissaoacessoEnumController.permissoes}"
                                            var="permissaoItem"
@@ -229,10 +225,6 @@
                         <p:outputLabel value="#{bundle.EditUsuarioLabel_dsLogin}" for="dsLogin" />
                         <p:inputText id="dsLogin" value="#{usuarioController.selected.dsLogin}" title="#{bundle.EditUsuarioTitle_dsLogin}" 
                                      required="true" requiredMessage="#{bundle.EditUsuarioRequiredMessage_dsLogin}"/>
-
-                        <p:outputLabel value="#{bundle.EditUsuarioLabel_dsSenha}" for="dsSenha" />
-                        <p:password id="dsSenha" value="#{usuarioController.selected.dsSenha}" title="#{bundle.EditUsuarioTitle_dsSenha}" feedback="true" 
-                                    required="true" requiredMessage="#{bundle.EditUsuarioRequiredMessage_dsSenha}"/>
                     </h:panelGrid>
                     <p:commandButton actionListener="#{usuarioController.update}" action="#{usuarioController.clearAllFilters()}" value="#{bundle.Save}" icon="fa fa-save" update="display,:UsuarioListForm:datalist,:growl" oncomplete="handleSubmit(args, 'UsuarioEditDialog');"/>
                     <p:commandButton actionListener="#{usuarioController.cancelar()}" action="#{usuarioController.clearAllFilters()}" immediate="true" value="#{bundle.Cancel}" icon="fa fa-close" onclick="UsuarioEditDialog.hide()"/>

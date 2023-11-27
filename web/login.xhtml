@@ -145,12 +145,17 @@
                                             placeholder="Senha" />
                             </div>
                         </div>
+                        
                         <div class="col-12 button-container">
                             <p:commandButton id="btnAcessar" action="#{usuarioAcessoController.autenticarUsuario()}" value="#{bundle.Login}" update="growl" styleClass="ui-button-raised" />
                         </div>
-                        <div class="col-12" style="text-align: center">
+                        
+                        <div class="col-12" style="display: grid; text-align: center">
                             <p:commandLink id="recuperaSenhaButton" value="Esqueci Minha Senha" update=":UsuarioRecuperaSenhaForm" actionListener="#{usuarioAcessoController.prepareNewPassword()}" oncomplete="PF('UsuarioRecuperaSenhaDialog').show()"/>
+                            <h:outputLabel/>
+                            <p:commandLink id="createButton" value="Cadastre-se" actionListener="#{usuarioController.prepareCreateLogin()}" update=":UsuarioCreateForm" oncomplete="PF('UsuarioCreateDialog').show()"/>
                         </div>
+                        
                         <div class="col-12">                            
                             <p:outputPanel style="text-align:center;">
                                 <p:outputLabel value="#{bundle.Version}" style="font-size: 12px !important;"/>
@@ -160,7 +165,6 @@
                 </div>
             </div>
         </div>
-
 
         <!--Inicio do diálogo de Recuperação de Senha-->
         <p:dialog id="UsuarioRecuperaSenhaDlg" widgetVar="UsuarioRecuperaSenhaDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.EditUsuarioSenhaForm}" showEffect="blind" hideEffect="blind">
@@ -180,6 +184,37 @@
             </h:form>
         </p:dialog>
         <!--Fim do diálogo de Recuperação de Senha-->
+        
+        <!--Inicio do diálogo de criação-->
+        <p:dialog id="UsuarioCreateDlg" widgetVar="UsuarioCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.CreateUsuarioTitle}">
+            <h:form id="UsuarioCreateForm">
+                <h:panelGroup id="display" rendered="#{usuarioController.selected != null}">
+                    <h:panelGrid columns="2">
+                        <p:outputLabel value="#{bundle.CreateUsuarioLabel_nmNome}" for="nmNome" />
+                        <p:inputText id="nmNome" value="#{usuarioController.selected.nmNome}" title="#{bundle.CreateUsuarioTitle_nmNome}" size="48" 
+                                     required="true" requiredMessage="#{bundle.CreateUsuarioRequiredMessage_nmNome}"/>
+
+                        <p:outputLabel value="#{bundle.CreateUsuarioLabel_usrDatanascimento}" for="usrDatanascimento" />
+                        <p:datePicker id="usrDatanascimento" mask="true" size="30" pattern="#{filterByDate.datePattern()}"
+                                      value="#{usuarioController.selected.usrDatanascimento}" title="#{bundle.CreateUsuarioTitle_usrDatanascimento}" required="true" requiredMessage="#{bundle.CreateUsuarioRequiredMessage_usrDatanascimento}"
+                                      showIcon="true" monthNavigator="true" yearNavigator="true" showWeek="true" yearRange="1900:2050"/>
+
+                        <p:outputLabel value="#{bundle.CreateUsuarioLabel_dsEmail}" for="dsEmail" />
+                        <p:inputText id="dsEmail" value="#{usuarioController.selected.dsEmail}" title="#{bundle.CreateUsuarioTitle_dsEmail}" size="48"/>
+
+                        <p:outputLabel value="#{bundle.CreateUsuarioLabel_dsLogin}" for="dsLogin" />
+                        <p:inputText id="dsLogin" value="#{usuarioController.selected.dsLogin}" title="#{bundle.CreateUsuarioTitle_dsLogin}" 
+                                     required="true" requiredMessage="#{bundle.CreateUsuarioRequiredMessage_dsLogin}"/>
+
+                        <p:outputLabel value="#{bundle.CreateUsuarioLabel_dsSenha}" for="dsSenha" />
+                        <p:password id="dsSenha" value="#{usuarioController.selected.dsSenha}" title="#{bundle.CreateUsuarioTitle_dsSenha}" feedback="true" 
+                                    required="true" requiredMessage="#{bundle.CreateUsuarioRequiredMessage_dsSenha}"/>
+                    </h:panelGrid>
+                    <p:commandButton actionListener="#{usuarioController.create}" value="#{bundle.CreateCadastro}" update=":growl,UsuarioCreateForm" onclick="UsuarioCreateDialog.hide()"/>                    
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+        <!--Fim do diálogo de criação-->
 
         <h:outputStylesheet library="webjars" name="font-awesome/6.4.0/css/all.min-jsf.css" />
         <h:outputStylesheet library="webjars" name="font-awesome/6.4.0/css/v4-shims.min-jsf.css" />
