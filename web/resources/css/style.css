@@ -27,22 +27,17 @@ body .ui-toolbar {
 }
 
 .layout-wrapper .layout-main .layout-topbar .layout-topbar-menu-wrapper .topbar-menu > li.profile-item > form > a {
-    display: inline-block !important;
+    display: inline-flex !important;
     position: relative !important;
-    top: -4px !important;
 }
 
 .layout-wrapper .layout-main .layout-topbar .layout-topbar-menu-wrapper .topbar-menu > li.profile-item > form > a img {
-    width: 40px !important;
-    height: 40px !important;
-    vertical-align: middle !important;
-    margin-top: -4px !important;
+    vertical-align: middle !important;    
 }
 
 .layout-wrapper .layout-main .layout-topbar .layout-topbar-menu-wrapper .topbar-menu > li.profile-item > form > a span {
     font-weight: bold !important;
     display: inline-block !important;
-    margin-left: 6px !important;
     -moz-transition: color 0.3s !important;
     -o-transition: color 0.3s !important;
     -webkit-transition: color 0.3s !important;
@@ -214,4 +209,17 @@ body .ui-datatable .ui-datatable-header {
 
 .panelGridMaxSize {
     width: 100%;
+}
+
+.avatar-topbar .ui-avatar-icon {
+    font-size: 1rem !important;
+    color: black !important;
+}
+
+.topbar-text-usrnome {
+    top: -9px !important; 
+    font-size: 14px; 
+    font-weight: bold; 
+    text-transform: uppercase; 
+    color: #008aa8;
 }
