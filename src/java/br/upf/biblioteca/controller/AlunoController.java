@@ -4,6 +4,7 @@ import br.upf.biblioteca.entity.Aluno;
 import br.upf.biblioteca.controller.util.JsfUtil;
 import br.upf.biblioteca.controller.util.JsfUtil.PersistAction;
 import br.upf.biblioteca.facade.AlunoFacade;
+import br.upf.biblioteca.service.CommonService;
 
 import java.io.Serializable;
 import java.util.List;
@@ -18,15 +19,24 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import org.primefaces.PrimeFaces;
+import org.primefaces.component.datatable.DataTable;
+import org.primefaces.event.ToggleEvent;
+import org.primefaces.model.Visibility;
 
-@Named("tblAlunoController")
+@Named("alunoController")
 @SessionScoped
 public class AlunoController implements Serializable {
 
     @EJB
     private br.upf.biblioteca.facade.AlunoFacade ejbFacade;
+    
     private List<Aluno> items = null;
     private Aluno selected;
+    private List<Aluno> filteredAluno;
+    private List<Boolean> listIsTrue;
+    
+    private final CommonService commonService = new CommonService();
 
     public AlunoController() {
     }
@@ -56,18 +66,18 @@ public class AlunoController implements Serializable {
     }
 
     public void create() {
-        persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("TblAlunoCreated"));
+        persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("AlunoCreated"));
         if (!JsfUtil.isValidationFailed()) {
             items = null;    // Invalidate list of items to trigger re-query.
         }
     }
 
     public void update() {
-        persist(PersistAction.UPDATE, ResourceBundle.getBundle("/Bundle").getString("TblAlunoUpdated"));
+        persist(PersistAction.UPDATE, ResourceBundle.getBundle("/Bundle").getString("AlunoUpdated"));
     }
 
     public void destroy() {
-        persist(PersistAction.DELETE, ResourceBundle.getBundle("/Bundle").getString("TblAlunoDeleted"));
+        persist(PersistAction.DELETE, ResourceBundle.getBundle("/Bundle").getString("AlunoDeleted"));
         if (!JsfUtil.isValidationFailed()) {
             selected = null; // Remove selection
             items = null;    // Invalidate list of items to trigger re-query.
@@ -109,7 +119,7 @@ public class AlunoController implements Serializable {
         }
     }
 
-    public Aluno getTblAluno(java.lang.Integer id) {
+    public Aluno getAluno(java.lang.Integer id) {
         return getFacade().find(id);
     }
 
@@ -120,9 +130,58 @@ public class AlunoController implements Serializable {
     public List<Aluno> getItemsAvailableSelectOne() {
         return getFacade().findAll();
     }
+    
+    public List<Aluno> getFilteredAluno() {
+        return filteredAluno;
+    }
+
+    public void setFilteredAluno(List<Aluno> filteredAluno) {
+        this.filteredAluno = filteredAluno;
+    }
+    
+    /**
+     * Buscar todos os registros, ordenando por nome. Utilizando as regras
+     * para buscar os dados novamente na base de dados.
+     *
+     * @param isReload
+     * @return
+     */
+    public List<Aluno> findAllOrderByNomeIsReload(boolean isReload) {
+        if (commonService.reloadItems((items == null), isReload)) {
+            items = getFacade().findAllOrderByNome();
+        }
+        return items;
+    }
+
+    public List<Boolean> getListIsTrue() {
+        return listIsTrue;
+    }
+
+    public void setListIsTrue(List<Boolean> listIsTrue) {
+        this.listIsTrue = listIsTrue;
+    }
+
+    public void onToggle(ToggleEvent e) {
+        listIsTrue.set((Integer) e.getData(), e.getVisibility() == Visibility.VISIBLE);
+    }
+
+    //Método que atualiza a dataTable e limpa os filtros das colunas
+    public void clearAllFilters() {
+        DataTable dataTable = (DataTable) FacesContext.getCurrentInstance().getViewRoot().findComponent("AlunoListForm:datalist");
+        if (dataTable != null && dataTable.getFilterBy() != null && !dataTable.getFilterBy().toString().isEmpty()) {
+            dataTable.reset();
+
+            PrimeFaces.current().ajax().update("AlunoListForm:datalist");
+        }
+    }
+
+    public void cancelar() {
+        selected = null;
+        items = null;
+    }
 
     @FacesConverter(forClass = Aluno.class)
-    public static class TblAlunoControllerConverter implements Converter {
+    public static class AlunoControllerConverter implements Converter {
 
         @Override
         public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
@@ -130,8 +189,8 @@ public class AlunoController implements Serializable {
                 return null;
             }
             AlunoController controller = (AlunoController) facesContext.getApplication().getELResolver().
-                    getValue(facesContext.getELContext(), null, "tblAlunoController");
-            return controller.getTblAluno(getKey(value));
+                    getValue(facesContext.getELContext(), null, "alunoController");
+            return controller.getAluno(getKey(value));
         }
 
         java.lang.Integer getKey(String value) {

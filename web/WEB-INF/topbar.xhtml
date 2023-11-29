@@ -8,85 +8,37 @@
 
     <div class="layout-topbar">
         <a href="#" id="layout-menu-btn" class="menu-btn">
-            <i class="pi pi-bars"/>
+            <i class="fa fa-bars" />
         </a>
-        
-        <div class="layout-topbar-menu-wrapper">            
+
+        <div class="topbar-search">
+        </div>
+
+        <div class="layout-topbar-menu-wrapper">  
             <ul class="topbar-menu fadeInDown">
-                <li class="profile-item">
-                    <a href="#">                            
-                        <p:graphicImage name="images/avatar.png" library="manhattan-layout" />
-                        <span class="topbar-item-name profile-name">Madison Hughes</span>
-                    </a>
-                    
-                    <ul class="fadeInDown animated">
-                        <li role="menuitem">
-                            <a href="#">
-                                <i class="pi pi-fw pi-user"/>
-                                <span>Profile</span>
-                                <span class="topbar-badge">5</span>
-                            </a>
-                        </li>
-                        <li role="menuitem">
-                            <a href="#">
-                                <i class="pi pi-fw pi-lock"/>
-                                <span>Privacy</span>
-                                <span class="topbar-badge">2</span>
-                            </a>
-                        </li>
-                        <li role="menuitem">
-                            <a href="#">
-                                <i class="pi pi-fw pi-cog"/>
-                                <span>Settings</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
                 <li>
-                    <a href="#">
-                        <i class="topbar-icon swing pi pi-fw pi-envelope"/>
-                        <span class="topbar-badge rubberBand">5</span>
-                        <span class="topbar-item-name">Messages</span>
-                    </a>
-                    <ul class="fadeInDown animated">
-                        <li role="menuitem">
-                            <a href="#" class="topbar-message">
-                                <p:graphicImage name="images/avatar1.png" library="manhattan-layout" width="35"/>
-                                <span>Give me a call</span>
-                            </a>
-                        </li>
-                        <li role="menuitem">
-                            <a href="#" class="topbar-message">
-                                <p:graphicImage name="images/avatar2.png" library="manhattan-layout" width="35"/>
-                                <span>Reports attached</span>
-                            </a>
-                        </li>
-                        <li role="menuitem">
-                            <a href="#" class="topbar-message">
-                                <p:graphicImage name="images/avatar3.png" library="manhattan-layout" width="35"/>
-                                <span>About your invoice</span>
-                            </a>
-                        </li>
-                        <li role="menuitem">
-                            <a href="#" class="topbar-message">
-                                <p:graphicImage name="images/avatar2.png" library="manhattan-layout" width="35"/>
-                                <span>Meeting today</span>
-                            </a>
-                        </li>
-                        <li role="menuitem">
-                            <a href="#" class="topbar-message">
-                                <p:graphicImage name="images/avatar4.png" library="manhattan-layout" width="35"/>
-                                <span>Out of office</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>                
+                    <h:form id="logout">
+                        <p:commandLink action="#{usuarioAcessoController.logout()}" title="Sair">
+                            <p:graphicImage name="images/logout.png" library="manhattan-layout" style="height: 25px;" title="Sair" />
+                        </p:commandLink>
+                    </h:form>
+                </li>
+
+                <li class="profile-item">
+                    <h:form>
+                        <a href="#" class="mr-2">
+                            <!-- Foto do Usuário -->
+                            <p:avatar icon="pi pi-user" styleClass="mr-2 avatar-topbar" shape="circle"/>
+
+                            <!-- Texto do Nome do Usuário -->
+                            <span> 
+                                <h:commandLink id="usuarioNome" value="#{usuarioController.usuarioLogado.nmNome}" styleClass="topbar-text-usrnome mr-2"
+                                               actionListener="#{usuarioController.setSelected(usuarioController.usuarioLogado)}" title="#{usuarioController.usuarioLogado.nmNome}" /> 
+                            </span>
+                        </a>                        
+                    </h:form>
+                </li>
             </ul>
-            
-            <a href="#" class="topbar-menu-btn">
-                <p:graphicImage name="images/avatar.png" library="manhattan-layout" />
-            </a>            
         </div>
     </div>
-
 </ui:composition>

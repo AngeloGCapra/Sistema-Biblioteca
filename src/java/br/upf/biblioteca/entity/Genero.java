@@ -26,9 +26,10 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "genero")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Genero.findAll", query = "SELECT t FROM Genero t"),
-    @NamedQuery(name = "Genero.findByCdGenero", query = "SELECT t FROM Genero t WHERE t.cdGenero = :cdGenero"),
-    @NamedQuery(name = "Genero.findByDsDescricao", query = "SELECT t FROM Genero t WHERE t.dsDescricao = :dsDescricao")})
+    @NamedQuery(name = "Genero.findAll", query = "SELECT g FROM Genero g"),
+    @NamedQuery(name = "Genero.findAllOrderByDescricao", query = "SELECT g FROM Genero g ORDER BY g.dsDescricao ASC"),
+    @NamedQuery(name = "Genero.findByCdGenero", query = "SELECT g FROM Genero g WHERE g.cdGenero = :cdGenero"),
+    @NamedQuery(name = "Genero.findByDsDescricao", query = "SELECT g FROM Genero g WHERE g.dsDescricao = :dsDescricao")})
 public class Genero implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -107,7 +108,7 @@ public class Genero implements Serializable {
 
     @Override
     public String toString() {
-        return "br.upf.biblioteca.entity.Genero[ cdGenero=" + cdGenero + " ]";
+        return dsDescricao;
     }
     
 }

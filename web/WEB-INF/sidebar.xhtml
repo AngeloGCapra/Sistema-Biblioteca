@@ -19,7 +19,13 @@
         <div class="layout-menu-container">
             <h:form id="menuform">                        
                 <pm:menu widgetVar="ManhattanMenuWidget">
-                    <p:menuitem id="Usuarios" value="#{bundle.SidebarLabel_Usuarios}" icon="fa fa-address-book-o" outcome="/admin/usuario/List.xhtml"/>
+                    <p:menuitem id="Usuario" value="#{bundle.SidebarLabel_Usuario}" icon="fa fa-circle-user" outcome="/admin/usuario/List.xhtml" rendered="#{usuarioController.usuarioLogado.usrPermissaoacesso == 'DIRETORIA'}"/>
+                    <p:menuitem id="TipoUsuario" value="#{bundle.SidebarLabel_TipoUsuario}" icon="fa fa-person" outcome="/admin/tipousuario/List.xhtml" rendered="#{usuarioController.usuarioLogado.usrPermissaoacesso == 'DIRETORIA'}"/>
+                    <p:menuitem id="Aluno" value="#{bundle.SidebarLabel_Aluno}" icon="fa fa-user" outcome="/admin/aluno/List.xhtml"/>
+                    <p:menuitem id="Autor" value="#{bundle.SidebarLabel_Autor}" icon="fa fa-address-book" outcome="/admin/autor/List.xhtml"/>
+                    <p:menuitem id="Genero" value="#{bundle.SidebarLabel_Genero}" icon="fa fa-sheet-plastic" outcome="/admin/genero/List.xhtml"/>
+                    <p:menuitem id="Livro" value="#{bundle.SidebarLabel_Livro}" icon="fa fa-book" outcome="/admin/livro/List.xhtml"/>
+                    <p:menuitem id="Locacao" value="#{bundle.SidebarLabel_Locacao}" icon="fa fa-book-open-reader" outcome="/admin/locacao/List.xhtml"/>
                 </pm:menu>
             </h:form>
         </div>

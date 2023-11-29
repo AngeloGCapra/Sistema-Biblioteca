@@ -27,11 +27,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "locacao")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Locacao.findAll", query = "SELECT t FROM Locacao t"),
-    @NamedQuery(name = "Locacao.findByCdLocacao", query = "SELECT t FROM Locacao t WHERE t.cdLocacao = :cdLocacao"),
-    @NamedQuery(name = "Locacao.findByDtDevolucao", query = "SELECT t FROM Locacao t WHERE t.dtDevolucao = :dtDevolucao"),
-    @NamedQuery(name = "Locacao.findBySnStatus", query = "SELECT t FROM Locacao t WHERE t.snStatus = :snStatus"),
-    @NamedQuery(name = "Locacao.findByDtLocacao", query = "SELECT t FROM Locacao t WHERE t.dtLocacao = :dtLocacao")})
+    @NamedQuery(name = "Locacao.findAll", query = "SELECT l FROM Locacao l"),
+    @NamedQuery(name = "Locacao.findAllOrderByDataDevolucao", query = "SELECT l FROM Locacao l ORDER BY l.dtDevolucao DESC"),
+    @NamedQuery(name = "Locacao.findByCdLocacao", query = "SELECT l FROM Locacao l WHERE l.cdLocacao = :cdLocacao"),
+    @NamedQuery(name = "Locacao.findByDtDevolucao", query = "SELECT l FROM Locacao l WHERE l.dtDevolucao = :dtDevolucao"),
+    @NamedQuery(name = "Locacao.findBySnStatus", query = "SELECT l FROM Locacao l WHERE l.snStatus = :snStatus"),
+    @NamedQuery(name = "Locacao.findByDtLocacao", query = "SELECT l FROM Locacao l WHERE l.dtLocacao = :dtLocacao")})
 public class Locacao implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -164,7 +165,7 @@ public class Locacao implements Serializable {
 
     @Override
     public String toString() {
-        return "br.upf.biblioteca.entity.Locacao[ cdLocacao=" + cdLocacao + " ]";
+        return "Código: " + cdLocacao;
     }
     
 }

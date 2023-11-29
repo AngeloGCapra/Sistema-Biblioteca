@@ -1,66 +1,163 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
 
-    <ui:composition template="/template.xhtml">
+    <ui:define name="title">
+        <h:outputText value="#{bundle.ListAutorTitle}"></h:outputText>
+    </ui:define>
 
+    <ui:define name="content">
+        <h:form id="AutorListForm">
+            <h:panelGroup id="pngList">
+                <p:breadCrumb id="bdcAutor" style="text-align: left; margin-bottom: 4px; text-transform: uppercase">
+                    <p:menuitem value="#{bundle.Title}"/>
+                    <p:menuitem value="#{bundle.BreadcrumbLabel_Autor}"/>
+                </p:breadCrumb>
 
-        <ui:define name="title">
-            <h:outputText value="#{bundle.ListTblAutorTitle}"></h:outputText>
-        </ui:define>
-
-        <ui:define name="body">
-            <h:form id="TblAutorListForm">
-                <p:panel header="#{bundle.ListTblAutorTitle}">
-                    <p:dataTable id="datalist" value="#{tblAutorController.items}" var="item"
-                                 selectionMode="single" selection="#{tblAutorController.selected}"
+                <p:fieldset toggleable="true">
+                    <p:dataTable id="datalist" value="#{autorController.findAllOrderByNomeIsReload(false)}" var="item" widgetVar="AutorTable"
+                                 selectionMode="single" selection="#{autorController.selected}"
                                  paginator="true"
                                  rowKey="#{item.cdAutor}"
-                                 rows="10"
-                                 rowsPerPageTemplate="10,20,30,40,50"
+                                 rows="#{bundle.DataTable_rows}"
+                                 rowsPerPageTemplate="#{bundle.DataTable_rowsPerPageTemplate}"
+                                 filteredValue="#{autorController.filteredAutor}"
+                                 emptyMessage="#{bundle.emptyMessage}"
                                  >
 
-                        <p:ajax event="rowSelect"   update="createButton viewButton editButton deleteButton"/>
-                        <p:ajax event="rowUnselect" update="createButton viewButton editButton deleteButton"/>
+                        <f:facet name="header">     
+                            <p:toolbar>
+                                <f:facet name="right">
+                                    <p:outputPanel style="text-align: right !important;">
+                                        <p:commandButton id="toggler" type="button" value="#{bundle.Datatable_Columns}" style="float:right" icon="fa fa-calculator" />
+                                        <p:columnToggler datasource="datalist" trigger="toggler">
+                                            <p:ajax event="toggle" listener="#{autorController.onToggle}"/>
+                                        </p:columnToggler>
+                                    </p:outputPanel>
+                                </f:facet>
+                            </p:toolbar>
+                        </f:facet>
 
-                        <p:column>
+                        <p:ajax event="rowSelect"   update="createButton viewButton editButton deleteButton reloadButton"/>
+                        <p:ajax event="rowUnselect" update="createButton viewButton editButton deleteButton reloadButton"/>
+
+                        <p:column sortBy="#{item.cdAutor}" filterBy="#{item.cdAutor}" filterMatchMode="exact">
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListTblAutorTitle_cdAutor}"/>
+                                <h:outputText value="#{bundle.ListAutorTitle_cdAutor}"/>
                             </f:facet>
                             <h:outputText value="#{item.cdAutor}"/>
                         </p:column>
-                        <p:column>
+
+                        <p:column sortBy="#{item.nmNome}" filterBy="#{item.nmNome}" filterMatchMode="contains">
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListTblAutorTitle_nmNome}"/>
+                                <h:outputText value="#{bundle.ListAutorTitle_nmNome}"/>
                             </f:facet>
                             <h:outputText value="#{item.nmNome}"/>
                         </p:column>
-                        <p:column>
+
+                        <p:column sortBy="#{item.dtNascimento}" filterBy="#{item.dtNascimento}" filterMatchMode="contains">
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListTblAutorTitle_dtNascimento}"/>
+                                <h:outputText value="#{bundle.ListAutorTitle_dtNascimento}"/>
                             </f:facet>
                             <h:outputText value="#{item.dtNascimento}">
-                                <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
                             </h:outputText>
                         </p:column>
+
                         <f:facet name="footer">
-                            <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{tblAutorController.prepareCreate}" update=":TblAutorCreateForm" oncomplete="PF('TblAutorCreateDialog').show()"/>
-                            <p:commandButton id="viewButton"   icon="ui-icon-search" value="#{bundle.View}" update=":TblAutorViewForm" oncomplete="PF('TblAutorViewDialog').show()" disabled="#{empty tblAutorController.selected}"/>
-                            <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update=":TblAutorEditForm" oncomplete="PF('TblAutorEditDialog').show()" disabled="#{empty tblAutorController.selected}"/>
-                            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{tblAutorController.destroy}" update=":growl,datalist" disabled="#{empty tblAutorController.selected}"/>
+                            <p:commandButton id="createButton" icon="fa fa-plus"   value="#{bundle.Create}" actionListener="#{autorController.prepareCreate()}"
+                                             update=":AutorCreateForm" oncomplete="PF('AutorCreateDialog').show()"/>                            
+
+                            <p:commandButton id="editButton"   icon="fa fa-edit" value="#{bundle.Edit}" update=":AutorEditForm" oncomplete="PF('AutorEditDialog').show()" 
+                                             disabled="#{empty autorController.selected}"/>
+
+                            <p:commandButton id="viewButton" icon="fa fa-search" value="#{bundle.View}" update=":AutorViewForm" oncomplete="PF('AutorViewDialog').show()" 
+                                             disabled="#{empty autorController.selected}"/>
+
+                            <p:commandButton id="deleteButton" icon="fa fa-trash"  value="#{bundle.Delete}" actionListener="#{autorController.destroy}" 
+                                             action="#{autorController.clearAllFilters()}" update=":growl,datalist,:AutorListForm:pngList" 
+                                             disabled="#{empty autorController.selected}">
+                                <p:confirm header="#{bundle.Confirmacao}" message="#{bundle.MessageConfirmationDestroy}" icon="fa fa-triangle-exclamation"/>
+                            </p:commandButton>
+
+                            <p:commandButton id="reloadButton" icon="fa fa-refresh"  value="#{bundle.Reload}" 
+                                             actionListener="#{autorController.findAllOrderByNomeIsReload(true)}"
+                                             action="#{autorController.cancelar()}"
+                                             update=":growl,:AutorListForm"/>
                         </f:facet>
                     </p:dataTable>
-                </p:panel>
+                </p:fieldset>
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton value="#{bundle.YesTitle}" type="button" styleClass="ui-confirmdialog-yes" icon="fa fa-check" />
+                    <p:commandButton value="#{bundle.NoTitle}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-times" />
+                </p:confirmDialog>
+            </h:panelGroup>
+        </h:form>
+
+        <!--Inicio do diálogo de criação-->
+        <p:dialog id="AutorCreateDlg" widgetVar="AutorCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.CreateAutorTitle}">
+            <h:form id="AutorCreateForm">
+                <h:panelGroup id="display">
+                    <h:panelGrid columns="2" rendered="#{autorController.selected != null}">
+                        <p:outputLabel value="#{bundle.CreateAutorLabel_nmNome}" for="nmNome" />
+                        <p:inputText id="nmNome" value="#{autorController.selected.nmNome}" title="#{bundle.CreateAutorTitle_nmNome}" size="48"
+                                     required="true" requiredMessage="#{bundle.CreateAutorRequiredMessage_nmNome}"/>
+                        
+                        <p:outputLabel value="#{bundle.CreateAutorLabel_dtNascimento}" for="dtNascimento" />
+                        <p:calendar id="dtNascimento" pattern="dd/MM/yyyy" value="#{autorController.selected.dtNascimento}" title="#{bundle.CreateAutorTitle_dtNascimento}" required="true" requiredMessage="#{bundle.CreateAutorRequiredMessage_dtNascimento}" showOn="button"/>
+                    </h:panelGrid>
+                    <p:commandButton actionListener="#{autorController.create}" action="${autorController.clearAllFilters()}" icon="fa fa-save" value="#{bundle.Save}" update="display,:AutorListForm:datalist,:growl,AutorListForm:bdcAutor" oncomplete="handleSubmit(args,'AutorCreateDialog');"/>
+                    <p:commandButton actionListener="#{autorController.cancelar()}" action="#{autorController.clearAllFilters()}" immediate="true" value="#{bundle.Cancel}" icon="fa fa-close" onclick="AutorCreateDialog.hide()"/>
+                </h:panelGroup>
             </h:form>
+        </p:dialog>
+        <!--Fim do diálogo de criação-->
 
-            <ui:include src="Create.xhtml"/>
-            <ui:include src="Edit.xhtml"/>
-            <ui:include src="View.xhtml"/>
-        </ui:define>
-    </ui:composition>
+        <!--Inicio do diálogo de edição-->
+        <p:dialog id="AutorEditDlg" widgetVar="AutorEditDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.EditAutorTitle}">
+            <h:form id="AutorEditForm">
+                <h:panelGroup id="display">
+                    <h:panelGrid columns="2" rendered="#{autorController.selected != null}">
+                        <p:outputLabel value="#{bundle.EditAutorLabel_cdAutor}" for="cdAutor" />
+                        <p:inputText id="cdAutor" value="#{autorController.selected.cdAutor}" title="#{bundle.EditAutorTitle_cdAutor}" required="true" requiredMessage="#{bundle.EditAutorRequiredMessage_cdAutor}" disabled="true"/>
+                        
+                        <p:outputLabel value="#{bundle.EditAutorLabel_nmNome}" for="nmNome" />
+                        <p:inputText id="nmNome" value="#{autorController.selected.nmNome}" title="#{bundle.EditAutorTitle_nmNome}" size="48"
+                                     required="true" requiredMessage="#{bundle.EditAutorRequiredMessage_nmNome}"/>
+                        
+                        <p:outputLabel value="#{bundle.EditAutorLabel_dtNascimento}" for="dtNascimento" />
+                        <p:calendar id="dtNascimento" pattern="dd/MM/yyyy" value="#{autorController.selected.dtNascimento}" title="#{bundle.EditAutorTitle_dtNascimento}" required="true" requiredMessage="#{bundle.EditAutorRequiredMessage_dtNascimento}" showOn="button"/>
+                    </h:panelGrid>
+                    <p:commandButton actionListener="#{autorController.update}" action="#{autorController.clearAllFilters()}" value="#{bundle.Save}" icon="fa fa-save" update="display,:AutorListForm:datalist,:growl" oncomplete="handleSubmit(args, 'AutorEditDialog');"/>
+                    <p:commandButton actionListener="#{autorController.cancelar()}" action="#{autorController.clearAllFilters()}" immediate="true" value="#{bundle.Cancel}" icon="fa fa-close" onclick="AutorEditDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+        <!--Fim do diálogo de edição-->
 
-</html>
+        <!--Inicio do diálogo de visualização-->
+        <p:dialog id="AutorViewDlg" widgetVar="AutorViewDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.ViewAutorTitle}">
+            <h:form id="AutorViewForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{autorController.selected != null}">
+                        <h:outputText value="#{bundle.ViewAutorLabel_cdAutor}"/>
+                        <h:outputText value="#{autorController.selected.cdAutor}" title="#{bundle.ViewAutorTitle_cdAutor}"/>
+                        
+                        <h:outputText value="#{bundle.ViewAutorLabel_nmNome}"/>
+                        <h:outputText value="#{autorController.selected.nmNome}" title="#{bundle.ViewAutorTitle_nmNome}"/>
+                        
+                        <h:outputText value="#{bundle.ViewAutorLabel_dtNascimento}"/>
+                        <h:outputText value="#{autorController.selected.dtNascimento}" title="#{bundle.ViewAutorTitle_dtNascimento}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                    </p:panelGrid>
+                    <p:commandButton immediate="true" value="#{bundle.Close}" icon="fa fa-close" onclick="AutorViewDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+        <!--Fim do diálogo de visualização-->
+    </ui:define>
+</ui:composition>

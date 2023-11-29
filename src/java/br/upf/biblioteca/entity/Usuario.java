@@ -2,6 +2,7 @@ package br.upf.biblioteca.entity;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -11,19 +12,31 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-/**
- *
- * @author Angelo
- */
+@NamedNativeQueries({
+    /**
+     * Método utilizado para buscar um usuário, utilizando e email e data de
+     * nascimento.
+     */
+    @NamedNativeQuery(name = "Usuario.findUsuarioByUsuarioEmailDataNascimento",
+            query = "SELECT * FROM Usuario AS usr "
+            + "WHERE usr.usr_usuario_email = ? "
+            + "AND DATE_TRUNC('day', usr.usr_datanascimento) = DATE_TRUNC('day', ?::date) LIMIT 1",
+            resultClass = Usuario.class)
+
+})
 @Entity
 @Table(name = "usuario")
 @XmlRootElement
@@ -34,47 +47,70 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Usuario.findByDsLogin", query = "SELECT u FROM Usuario u WHERE u.dsLogin = :dsLogin"),
     @NamedQuery(name = "Usuario.findByDsSenha", query = "SELECT u FROM Usuario u WHERE u.dsSenha = :dsSenha"),
     @NamedQuery(name = "Usuario.findByNmNome", query = "SELECT u FROM Usuario u WHERE u.nmNome = :nmNome"),
-    @NamedQuery(name = "Usuario.findByDsEmail", query = "SELECT u FROM Usuario u WHERE u.dsEmail = :dsEmail")})
+    @NamedQuery(name = "Usuario.findByDsEmail", query = "SELECT u FROM Usuario u WHERE u.dsEmail = :dsEmail"),
+    @NamedQuery(name = "Usuario.findByUsrUsuarioLogin", query = "SELECT u FROM Usuario u WHERE u.usrUsuarioLogin = :usrUsuarioLogin"),
+    @NamedQuery(name = "Usuario.findByUsrUsuarioEmail", query = "SELECT u FROM Usuario u WHERE u.usrUsuarioEmail = :usrUsuarioEmail"),
+    @NamedQuery(name = "Usuario.findByUsrPermissaoacesso", query = "SELECT u FROM Usuario u WHERE u.usrPermissaoacesso = :usrPermissaoacesso")})
 public class Usuario implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "cd_usuario")
     private Integer cdUsuario;
-    
+
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 250)
     @Column(name = "ds_login")
     private String dsLogin;
-    
+
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 250)
     @Column(name = "ds_senha")
     private String dsSenha;
-    
+
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 250)
     @Column(name = "nm_nome")
     private String nmNome;
-    
+
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 2147483647)
     @Column(name = "ds_email")
     private String dsEmail;
-    
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cdUsuario")
-    private Collection<Livro> livroCollection;
-    
+
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 2147483647)
+    @Column(name = "usr_usuario_login")
+    private String usrUsuarioLogin;
+
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 2147483647)
+    @Column(name = "usr_usuario_email")
+    private String usrUsuarioEmail;
+
+    @Size(max = 50)
+    @NotNull
+    @Column(name = "usr_permissaoacesso")
+    private String usrPermissaoacesso;
+
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "usr_datanascimento")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date usrDatanascimento;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "cdUsuario")
     private Collection<Locacao> locacaoCollection;
-    
+
     @JoinColumn(name = "cd_tipo_usuario", referencedColumnName = "cd_tipo_usuario")
     @ManyToOne(optional = false)
     private TipoUsuario cdTipoUsuario;
@@ -134,13 +170,36 @@ public class Usuario implements Serializable {
         this.dsEmail = dsEmail;
     }
 
-    @XmlTransient
-    public Collection<Livro> getLivroCollection() {
-        return livroCollection;
+    public String getUsrUsuarioLogin() {
+        return usrUsuarioLogin;
     }
 
-    public void setLivroCollection(Collection<Livro> livroCollection) {
-        this.livroCollection = livroCollection;
+    public void setUsrUsuarioLogin(String usrUsuarioLogin) {
+        this.usrUsuarioLogin = usrUsuarioLogin;
+    }
+
+    public String getUsrUsuarioEmail() {
+        return usrUsuarioEmail;
+    }
+
+    public void setUsrUsuarioEmail(String usrUsuarioEmail) {
+        this.usrUsuarioEmail = usrUsuarioEmail;
+    }
+
+    public String getUsrPermissaoacesso() {
+        return usrPermissaoacesso;
+    }
+
+    public void setUsrPermissaoacesso(String usrPermissaoacesso) {
+        this.usrPermissaoacesso = usrPermissaoacesso;
+    }
+
+    public Date getUsrDatanascimento() {
+        return usrDatanascimento;
+    }
+
+    public void setUsrDatanascimento(Date usrDatanascimento) {
+        this.usrDatanascimento = usrDatanascimento;
     }
 
     @XmlTransient
@@ -182,7 +241,7 @@ public class Usuario implements Serializable {
 
     @Override
     public String toString() {
-        return "br.upf.biblioteca.entity.Usuario[ cdUsuario=" + cdUsuario + " ]";
+        return nmNome;
     }
-    
+
 }

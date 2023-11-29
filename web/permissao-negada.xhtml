@@ -1,0 +1,50 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Acesso Paciente</ui:define>
+
+    <ui:define name="content">
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <h:form  acceptcharset="UTF-8" id="frmUsuario">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <p:tab title="PERMISSÃO NEGADA">
+                                <h:panelGrid columns="2" >
+                                    <div class="ui-g" style="margin: 250px">                                         
+                                        <h:panelGrid >
+                                            <p:outputPanel style="text-align: center">
+                                                <h1>Atenção! Acesso Negado.</h1>
+                                                <p:graphicImage name="images/logo-bibliogister.png" library="manhattan-layout" height="120"/>                                
+                                            </p:outputPanel>
+                                            <p:outputPanel style="text-align: center">
+                                                <h:outputText value="Olá #{usuarioController.usuarioLogado.nmNome}!" style="font-weight:bold"/>
+                                            </p:outputPanel>                            
+                                            <p:outputPanel style="text-align: center">
+                                                <h:outputText
+                                                    value="Você não tem acesso a funcionalidade selecionada.">
+                                                </h:outputText>
+
+                                            </p:outputPanel>
+                                            <p:outputPanel style="text-align: center">
+                                                <h:outputText
+                                                    value="Consulte o administrador do sistema."/>                                                
+                                            </p:outputPanel>
+                                            <p:outputLabel>
+                                            </p:outputLabel>
+                                        </h:panelGrid>
+                                    </div>
+                                </h:panelGrid>
+                            </p:tab>
+                        </div>
+                    </div>
+                </h:form>
+            </div>
+        </div>
+    </ui:define>
+
+</ui:composition>

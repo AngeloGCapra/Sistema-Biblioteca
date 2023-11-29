@@ -6,59 +6,152 @@
                 template="/WEB-INF/template.xhtml">
 
     <ui:define name="title">
-        <h:outputText value="#{bundle.ListTblAlunoTitle}"></h:outputText>
+        <h:outputText value="#{bundle.ListAlunoTitle}"></h:outputText>
     </ui:define>
 
     <ui:define name="content">
-        <h:form id="TblAlunoListForm">
-            <p:panel header="#{bundle.ListTblAlunoTitle}">
-                <p:dataTable id="datalist" value="#{tblAlunoController.items}" var="item"
-                             selectionMode="single" selection="#{tblAlunoController.selected}"
-                             paginator="true"
-                             rowKey="#{item.cdAluno}"
-                             rows="10"
-                             rowsPerPageTemplate="10,20,30,40,50"
-                             >
+        <h:form id="AlunoListForm">
+            <h:panelGroup id="pngList">
+                <p:breadCrumb id="bdcAluno" style="text-align: left; margin-bottom: 4px; text-transform: uppercase">
+                    <p:menuitem value="#{bundle.Title}"/>
+                    <p:menuitem value="#{bundle.BreadcrumbLabel_Aluno}"/>
+                </p:breadCrumb>
 
-                    <p:ajax event="rowSelect"   update="createButton viewButton editButton deleteButton"/>
-                    <p:ajax event="rowUnselect" update="createButton viewButton editButton deleteButton"/>
+                <p:fieldset toggleable="true">
+                    <p:dataTable id="datalist" value="#{alunoController.findAllOrderByNomeIsReload(false)}" var="item" widgetVar="AlunoTable"
+                                 selectionMode="single" selection="#{alunoController.selected}"
+                                 paginator="true"
+                                 rowKey="#{item.cdAluno}"
+                                 rows="#{bundle.DataTable_rows}"
+                                 rowsPerPageTemplate="#{bundle.DataTable_rowsPerPageTemplate}"
+                                 filteredValue="#{alunoController.filteredAluno}"
+                                 emptyMessage="#{bundle.emptyMessage}"
+                                 >
 
-                    <p:column>
-                        <f:facet name="header">
-                            <h:outputText value="#{bundle.ListTblAlunoTitle_cdAluno}"/>
+                        <f:facet name="header">     
+                            <p:toolbar>
+                                <f:facet name="right">
+                                    <p:outputPanel style="text-align: right !important;">
+                                        <p:commandButton id="toggler" type="button" value="#{bundle.Datatable_Columns}" style="float:right" icon="fa fa-calculator" />
+                                        <p:columnToggler datasource="datalist" trigger="toggler">
+                                            <p:ajax event="toggle" listener="#{alunoController.onToggle}"/>
+                                        </p:columnToggler>
+                                    </p:outputPanel>
+                                </f:facet>
+                            </p:toolbar>
                         </f:facet>
-                        <h:outputText value="#{item.cdAluno}"/>
-                    </p:column>
-                    <p:column>
-                        <f:facet name="header">
-                            <h:outputText value="#{bundle.ListTblAlunoTitle_nmNome}"/>
+
+                        <p:ajax event="rowSelect"   update="createButton viewButton editButton deleteButton reloadButton"/>
+                        <p:ajax event="rowUnselect" update="createButton viewButton editButton deleteButton reloadButton"/>
+
+                        <p:column sortBy="#{item.cdAluno}" filterBy="#{item.cdAluno}" filterMatchMode="exact">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAlunoTitle_cdAluno}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.cdAluno}"/>
+                        </p:column>
+
+                        <p:column sortBy="#{item.nmNome}" filterBy="#{item.nmNome}" filterMatchMode="contains">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAlunoTitle_nmNome}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.nmNome}"/>
+                        </p:column>
+
+                        <p:column sortBy="#{item.dsContato}" filterBy="#{item.dsContato}" filterMatchMode="contains">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAlunoTitle_dsContato}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.dsContato}"/>
+                        </p:column>
+
+                        <f:facet name="footer">
+                            <p:commandButton id="createButton" icon="fa fa-plus"   value="#{bundle.Create}" actionListener="#{alunoController.prepareCreate()}"
+                                             update=":AlunoCreateForm" oncomplete="PF('AlunoCreateDialog').show()"/>                            
+
+                            <p:commandButton id="editButton"   icon="fa fa-edit" value="#{bundle.Edit}" update=":AlunoEditForm" oncomplete="PF('AlunoEditDialog').show()" 
+                                             disabled="#{empty alunoController.selected}"/>
+
+                            <p:commandButton id="viewButton" icon="fa fa-search" value="#{bundle.View}" update=":AlunoViewForm" oncomplete="PF('AlunoViewDialog').show()" 
+                                             disabled="#{empty alunoController.selected}"/>
+
+                            <p:commandButton id="deleteButton" icon="fa fa-trash"  value="#{bundle.Delete}" actionListener="#{alunoController.destroy}" 
+                                             action="#{alunoController.clearAllFilters()}" update=":growl,datalist,:AlunoListForm:pngList" 
+                                             disabled="#{empty alunoController.selected}">
+                                <p:confirm header="#{bundle.Confirmacao}" message="#{bundle.MessageConfirmationDestroy}" icon="fa fa-triangle-exclamation"/>
+                            </p:commandButton>
+
+                            <p:commandButton id="reloadButton" icon="fa fa-refresh"  value="#{bundle.Reload}" 
+                                             actionListener="#{alunoController.findAllOrderByNomeIsReload(true)}"
+                                             action="#{alunoController.cancelar()}"
+                                             update=":growl,:AlunoListForm"/>
                         </f:facet>
-                        <h:outputText value="#{item.nmNome}"/>
-                    </p:column>
-                    <p:column>
-                        <f:facet name="header">
-                            <h:outputText value="#{bundle.ListTblAlunoTitle_nrDevendo}"/>
-                        </f:facet>
-                        <h:outputText value="#{item.nrDevendo}"/>
-                    </p:column>
-                    <p:column>
-                        <f:facet name="header">
-                            <h:outputText value="#{bundle.ListTblAlunoTitle_dsContato}"/>
-                        </f:facet>
-                        <h:outputText value="#{item.dsContato}"/>
-                    </p:column>
-                    <f:facet name="footer">
-                        <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{tblAlunoController.prepareCreate}" update=":TblAlunoCreateForm" oncomplete="PF('TblAlunoCreateDialog').show()"/>
-                        <p:commandButton id="viewButton"   icon="ui-icon-search" value="#{bundle.View}" update=":TblAlunoViewForm" oncomplete="PF('TblAlunoViewDialog').show()" disabled="#{empty tblAlunoController.selected}"/>
-                        <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update=":TblAlunoEditForm" oncomplete="PF('TblAlunoEditDialog').show()" disabled="#{empty tblAlunoController.selected}"/>
-                        <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{tblAlunoController.destroy}" update=":growl,datalist" disabled="#{empty tblAlunoController.selected}"/>
-                    </f:facet>
-                </p:dataTable>
-            </p:panel>
+                    </p:dataTable>
+                </p:fieldset>
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton value="#{bundle.YesTitle}" type="button" styleClass="ui-confirmdialog-yes" icon="fa fa-check" />
+                    <p:commandButton value="#{bundle.NoTitle}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-times" />
+                </p:confirmDialog>
+            </h:panelGroup>
         </h:form>
 
-        <ui:include src="Create.xhtml"/>
-        <ui:include src="Edit.xhtml"/>
-        <ui:include src="View.xhtml"/>
+        <!--Inicio do diálogo de criação-->
+        <p:dialog id="AlunoCreateDlg" widgetVar="AlunoCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.CreateAlunoTitle}">
+            <h:form id="AlunoCreateForm">
+                <h:panelGroup id="display">
+                    <h:panelGrid columns="2" rendered="#{alunoController.selected != null}">
+                        <p:outputLabel value="#{bundle.CreateAlunoLabel_nmNome}" for="nmNome" />
+                        <p:inputText id="nmNome" value="#{alunoController.selected.nmNome}" title="#{bundle.CreateAlunoTitle_nmNome}" required="true" requiredMessage="#{bundle.CreateAlunoRequiredMessage_nmNome}"/>                                              
+                        
+                        <p:outputLabel value="#{bundle.CreateAlunoLabel_dsContato}" for="dsContato" />
+                        <p:inputText id="dsContato" value="#{alunoController.selected.dsContato}" title="#{bundle.CreateAlunoTitle_dsContato}" required="true" requiredMessage="#{bundle.CreateAlunoRequiredMessage_dsContato}"/>
+                    </h:panelGrid>
+                    <p:commandButton actionListener="#{alunoController.create}" action="${alunoController.clearAllFilters()}" icon="fa fa-save" value="#{bundle.Save}" update="display,:AlunoListForm:datalist,:growl,AlunoListForm:bdcAluno" oncomplete="handleSubmit(args,'AlunoCreateDialog');"/>
+                    <p:commandButton actionListener="#{alunoController.cancelar()}" action="#{alunoController.clearAllFilters()}" immediate="true" value="#{bundle.Cancel}" icon="fa fa-close" onclick="AlunoCreateDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+        <!--Fim do diálogo de criação-->
+
+        <!--Inicio do diálogo de edição-->
+        <p:dialog id="AlunoEditDlg" widgetVar="AlunoEditDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.EditAlunoTitle}">
+            <h:form id="AlunoEditForm">
+                <h:panelGroup id="display">
+                    <h:panelGrid columns="2" rendered="#{alunoController.selected != null}">
+                        <p:outputLabel value="#{bundle.EditAlunoLabel_cdAluno}" for="cdAluno" />
+                        <p:inputText id="cdAluno" value="#{alunoController.selected.cdAluno}" title="#{bundle.EditAlunoTitle_cdAluno}" required="true" requiredMessage="#{bundle.EditAlunoRequiredMessage_cdAluno}" disabled="true"/>
+                        
+                        <p:outputLabel value="#{bundle.EditAlunoLabel_nmNome}" for="nmNome" />
+                        <p:inputText id="nmNome" value="#{alunoController.selected.nmNome}" title="#{bundle.EditAlunoTitle_nmNome}" required="true" requiredMessage="#{bundle.EditAlunoRequiredMessage_nmNome}"/>                                               
+                        
+                        <p:outputLabel value="#{bundle.EditAlunoLabel_dsContato}" for="dsContato" />
+                        <p:inputText id="dsContato" value="#{alunoController.selected.dsContato}" title="#{bundle.EditAlunoTitle_dsContato}" required="true" requiredMessage="#{bundle.EditAlunoRequiredMessage_dsContato}"/>
+                    </h:panelGrid>
+                    <p:commandButton actionListener="#{alunoController.update}" action="#{alunoController.clearAllFilters()}" value="#{bundle.Save}" icon="fa fa-save" update="display,:AlunoListForm:datalist,:growl" oncomplete="handleSubmit(args, 'AlunoEditDialog');"/>
+                    <p:commandButton actionListener="#{alunoController.cancelar()}" action="#{alunoController.clearAllFilters()}" immediate="true" value="#{bundle.Cancel}" icon="fa fa-close" onclick="AlunoEditDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+        <!--Fim do diálogo de edição-->
+
+        <!--Inicio do diálogo de visualização-->
+        <p:dialog id="AlunoViewDlg" widgetVar="AlunoViewDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.ViewAlunoTitle}">
+            <h:form id="AlunoViewForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{alunoController.selected != null}">
+                        <h:outputText value="#{bundle.ViewAlunoLabel_cdAluno}"/>
+                        <h:outputText value="#{alunoController.selected.cdAluno}" title="#{bundle.ViewAlunoTitle_cdAluno}"/>
+                        
+                        <h:outputText value="#{bundle.ViewAlunoLabel_nmNome}"/>
+                        <h:outputText value="#{alunoController.selected.nmNome}" title="#{bundle.ViewAlunoTitle_nmNome}"/>                       
+                        
+                        <h:outputText value="#{bundle.ViewAlunoLabel_dsContato}"/>
+                        <h:outputText value="#{alunoController.selected.dsContato}" title="#{bundle.ViewAlunoTitle_dsContato}"/>
+                    </p:panelGrid>
+                    <p:commandButton immediate="true" value="#{bundle.Close}" icon="fa fa-close" onclick="AlunoViewDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+        <!--Fim do diálogo de visualização-->
     </ui:define>
 </ui:composition>

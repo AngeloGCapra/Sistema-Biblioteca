@@ -1,58 +1,143 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
 
-    <ui:composition template="/template.xhtml">
+    <ui:define name="title">
+        <h:outputText value="#{bundle.ListTipoUsuarioTitle}"></h:outputText>
+    </ui:define>
 
+    <ui:define name="content">
+        <h:form id="TipoUsuarioListForm">
+            <h:panelGroup id="pngList">
+                <p:breadCrumb id="bdcTipoUsuario" style="text-align: left; margin-bottom: 4px; text-transform: uppercase">
+                    <p:menuitem value="#{bundle.Title}"/>
+                    <p:menuitem value="#{bundle.BreadcrumbLabel_TipoUsuario}"/>
+                </p:breadCrumb>
 
-        <ui:define name="title">
-            <h:outputText value="#{bundle.ListTblTipoUsuarioTitle}"></h:outputText>
-        </ui:define>
-
-        <ui:define name="body">
-            <h:form id="TblTipoUsuarioListForm">
-                <p:panel header="#{bundle.ListTblTipoUsuarioTitle}">
-                    <p:dataTable id="datalist" value="#{tblTipoUsuarioController.items}" var="item"
-                                 selectionMode="single" selection="#{tblTipoUsuarioController.selected}"
+                <p:fieldset toggleable="true">
+                    <p:dataTable id="datalist" value="#{tipoUsuarioController.findAllOrderByDescricaoIsReload(false)}" var="item" widgetVar="TipoUsuarioTable"
+                                 selectionMode="single" selection="#{tipoUsuarioController.selected}"
                                  paginator="true"
                                  rowKey="#{item.cdTipoUsuario}"
-                                 rows="10"
-                                 rowsPerPageTemplate="10,20,30,40,50"
+                                 rows="#{bundle.DataTable_rows}"
+                                 rowsPerPageTemplate="#{bundle.DataTable_rowsPerPageTemplate}"
+                                 filteredValue="#{tipoUsuarioController.filteredTipoUsuario}"
+                                 emptyMessage="#{bundle.emptyMessage}"
                                  >
 
-                        <p:ajax event="rowSelect"   update="createButton viewButton editButton deleteButton"/>
-                        <p:ajax event="rowUnselect" update="createButton viewButton editButton deleteButton"/>
+                        <f:facet name="header">     
+                            <p:toolbar>
+                                <f:facet name="right">
+                                    <p:outputPanel style="text-align: right !important;">
+                                        <p:commandButton id="toggler" type="button" value="#{bundle.Datatable_Columns}" style="float:right" icon="fa fa-calculator" />
+                                        <p:columnToggler datasource="datalist" trigger="toggler">
+                                            <p:ajax event="toggle" listener="#{tipoUsuarioController.onToggle}"/>
+                                        </p:columnToggler>
+                                    </p:outputPanel>
+                                </f:facet>
+                            </p:toolbar>
+                        </f:facet>
 
-                        <p:column>
+                        <p:ajax event="rowSelect"   update="createButton viewButton editButton deleteButton reloadButton"/>
+                        <p:ajax event="rowUnselect" update="createButton viewButton editButton deleteButton reloadButton"/>
+
+                        <p:column sortBy="#{item.cdTipoUsuario}" filterBy="#{item.cdTipoUsuario}" filterMatchMode="exact">
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListTblTipoUsuarioTitle_cdTipoUsuario}"/>
+                                <h:outputText value="#{bundle.ListTipoUsuarioTitle_cdTipoUsuario}"/>
                             </f:facet>
                             <h:outputText value="#{item.cdTipoUsuario}"/>
                         </p:column>
-                        <p:column>
+
+                        <p:column sortBy="#{item.dsDescricao}" filterBy="#{item.dsDescricao}" filterMatchMode="contains">
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListTblTipoUsuarioTitle_dsDescricao}"/>
+                                <h:outputText value="#{bundle.ListTipoUsuarioTitle_dsDescricao}"/>
                             </f:facet>
                             <h:outputText value="#{item.dsDescricao}"/>
                         </p:column>
+
                         <f:facet name="footer">
-                            <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{tblTipoUsuarioController.prepareCreate}" update=":TblTipoUsuarioCreateForm" oncomplete="PF('TblTipoUsuarioCreateDialog').show()"/>
-                            <p:commandButton id="viewButton"   icon="ui-icon-search" value="#{bundle.View}" update=":TblTipoUsuarioViewForm" oncomplete="PF('TblTipoUsuarioViewDialog').show()" disabled="#{empty tblTipoUsuarioController.selected}"/>
-                            <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update=":TblTipoUsuarioEditForm" oncomplete="PF('TblTipoUsuarioEditDialog').show()" disabled="#{empty tblTipoUsuarioController.selected}"/>
-                            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{tblTipoUsuarioController.destroy}" update=":growl,datalist" disabled="#{empty tblTipoUsuarioController.selected}"/>
+                            <p:commandButton id="createButton" icon="fa fa-plus"   value="#{bundle.Create}" actionListener="#{tipoUsuarioController.prepareCreate()}"
+                                             update=":TipoUsuarioCreateForm" oncomplete="PF('TipoUsuarioCreateDialog').show()"/>                            
+
+                            <p:commandButton id="editButton"   icon="fa fa-edit" value="#{bundle.Edit}" update=":TipoUsuarioEditForm" oncomplete="PF('TipoUsuarioEditDialog').show()" 
+                                             disabled="#{empty tipoUsuarioController.selected}"/>
+
+                            <p:commandButton id="viewButton" icon="fa fa-search" value="#{bundle.View}" update=":TipoUsuarioViewForm" oncomplete="PF('TipoUsuarioViewDialog').show()" 
+                                             disabled="#{empty tipoUsuarioController.selected}"/>
+
+                            <p:commandButton id="deleteButton" icon="fa fa-trash"  value="#{bundle.Delete}" actionListener="#{tipoUsuarioController.destroy}" 
+                                             action="#{tipoUsuarioController.clearAllFilters()}" update=":growl,datalist,:TipoUsuarioListForm:pngList" 
+                                             disabled="#{empty tipoUsuarioController.selected}">
+                                <p:confirm header="#{bundle.Confirmacao}" message="#{bundle.MessageConfirmationDestroy}" icon="fa fa-triangle-exclamation"/>
+                            </p:commandButton>
+
+                            <p:commandButton id="reloadButton" icon="fa fa-refresh"  value="#{bundle.Reload}" 
+                                             actionListener="#{tipoUsuarioController.findAllOrderByDescricaoIsReload(true)}"
+                                             action="#{tipoUsuarioController.cancelar()}"
+                                             update=":growl,:TipoUsuarioListForm"/>
                         </f:facet>
                     </p:dataTable>
-                </p:panel>
+                </p:fieldset>
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton value="#{bundle.YesTitle}" type="button" styleClass="ui-confirmdialog-yes" icon="fa fa-check" />
+                    <p:commandButton value="#{bundle.NoTitle}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-times" />
+                </p:confirmDialog>
+            </h:panelGroup>
+        </h:form>
+
+        <!--Inicio do diálogo de criação-->
+        <p:dialog id="TipoUsuarioCreateDlg" widgetVar="TipoUsuarioCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.CreateTipoUsuarioTitle}">
+            <h:form id="TipoUsuarioCreateForm">
+                <h:panelGroup id="display">
+                    <h:panelGrid columns="2" rendered="#{tipoUsuarioController.selected != null}">
+                        <p:outputLabel value="#{bundle.CreateTipoUsuarioLabel_dsDescricao}" for="dsDescricao" />
+                        <p:inputText id="dsDescricao" value="#{tipoUsuarioController.selected.dsDescricao}" title="#{bundle.CreateTipoUsuarioTitle_dsDescricao}" size="48"
+                                     required="true" requiredMessage="#{bundle.CreateTipoUsuarioRequiredMessage_dsDescricao}"/>
+                    </h:panelGrid>
+                    <p:commandButton actionListener="#{tipoUsuarioController.create}" action="${tipoUsuarioController.clearAllFilters()}" icon="fa fa-save" value="#{bundle.Save}" update="display,:TipoUsuarioListForm:datalist,:growl,TipoUsuarioListForm:bdcTipoUsuario" oncomplete="handleSubmit(args,'TipoUsuarioCreateDialog');"/>
+                    <p:commandButton actionListener="#{tipoUsuarioController.cancelar()}" action="#{tipoUsuarioController.clearAllFilters()}" immediate="true" value="#{bundle.Cancel}" icon="fa fa-close" onclick="TipoUsuarioCreateDialog.hide()"/>
+                </h:panelGroup>
             </h:form>
+        </p:dialog>
+        <!--Fim do diálogo de criação-->
 
-            <ui:include src="Create.xhtml"/>
-            <ui:include src="Edit.xhtml"/>
-            <ui:include src="View.xhtml"/>
-        </ui:define>
-    </ui:composition>
+        <!--Inicio do diálogo de edição-->
+        <p:dialog id="TipoUsuarioEditDlg" widgetVar="TipoUsuarioEditDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.EditTipoUsuarioTitle}">
+            <h:form id="TipoUsuarioEditForm">
+                <h:panelGroup id="display">
+                    <h:panelGrid columns="2" rendered="#{tipoUsuarioController.selected != null}">
+                        <p:outputLabel value="#{bundle.EditTipoUsuarioLabel_cdTipoUsuario}" for="cdTipoUsuario" />
+                        <p:inputText id="cdTipoUsuario" value="#{tipoUsuarioController.selected.cdTipoUsuario}" title="#{bundle.EditTipoUsuarioTitle_cdTipoUsuario}" required="true" requiredMessage="#{bundle.EditTipoUsuarioRequiredMessage_cdTipoUsuario}" disabled="true"/>
+                        
+                        <p:outputLabel value="#{bundle.EditTipoUsuarioLabel_dsDescricao}" for="dsDescricao" />
+                        <p:inputText id="dsDescricao" value="#{tipoUsuarioController.selected.dsDescricao}" title="#{bundle.EditTipoUsuarioTitle_dsDescricao}" size="48"
+                                     required="true" requiredMessage="#{bundle.EditTipoUsuarioRequiredMessage_dsDescricao}"/>
+                    </h:panelGrid>
+                    <p:commandButton actionListener="#{tipoUsuarioController.update}" action="#{tipoUsuarioController.clearAllFilters()}" value="#{bundle.Save}" icon="fa fa-save" update="display,:TipoUsuarioListForm:datalist,:growl" oncomplete="handleSubmit(args, 'TipoUsuarioEditDialog');"/>
+                    <p:commandButton actionListener="#{tipoUsuarioController.cancelar()}" action="#{tipoUsuarioController.clearAllFilters()}" immediate="true" value="#{bundle.Cancel}" icon="fa fa-close" onclick="TipoUsuarioEditDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+        <!--Fim do diálogo de edição-->
 
-</html>
+        <!--Inicio do diálogo de visualização-->
+        <p:dialog id="TipoUsuarioViewDlg" widgetVar="TipoUsuarioViewDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.ViewTipoUsuarioTitle}">
+            <h:form id="TipoUsuarioViewForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{tipoUsuarioController.selected != null}">
+                        <h:outputText value="#{bundle.ViewTipoUsuarioLabel_cdTipoUsuario}"/>
+                        <h:outputText value="#{tipoUsuarioController.selected.cdTipoUsuario}" title="#{bundle.ViewTipoUsuarioTitle_cdTipoUsuario}"/>
+                        
+                        <h:outputText value="#{bundle.ViewTipoUsuarioLabel_dsDescricao}"/>
+                        <h:outputText value="#{tipoUsuarioController.selected.dsDescricao}" title="#{bundle.ViewTipoUsuarioTitle_dsDescricao}"/>
+                    </p:panelGrid>
+                    <p:commandButton immediate="true" value="#{bundle.Close}" icon="fa fa-close" onclick="TipoUsuarioViewDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+        <!--Fim do diálogo de visualização-->
+    </ui:define>
+</ui:composition>

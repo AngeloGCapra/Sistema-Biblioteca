@@ -29,10 +29,11 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "autor")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Autor.findAll", query = "SELECT t FROM Autor t"),
-    @NamedQuery(name = "Autor.findByCdAutor", query = "SELECT t FROM Autor t WHERE t.cdAutor = :cdAutor"),
-    @NamedQuery(name = "Autor.findByNmNome", query = "SELECT t FROM Autor t WHERE t.nmNome = :nmNome"),
-    @NamedQuery(name = "Autor.findByDtNascimento", query = "SELECT t FROM Autor t WHERE t.dtNascimento = :dtNascimento")})
+    @NamedQuery(name = "Autor.findAll", query = "SELECT a FROM Autor a"),
+    @NamedQuery(name = "Autor.findAllOrderByNome", query = "SELECT a FROM Autor a ORDER BY a.nmNome"),
+    @NamedQuery(name = "Autor.findByCdAutor", query = "SELECT a FROM Autor a WHERE a.cdAutor = :cdAutor"),
+    @NamedQuery(name = "Autor.findByNmNome", query = "SELECT a FROM Autor a WHERE a.nmNome = :nmNome"),
+    @NamedQuery(name = "Autor.findByDtNascimento", query = "SELECT a FROM Autor a WHERE a.dtNascimento = :dtNascimento")})
 public class Autor implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -126,7 +127,7 @@ public class Autor implements Serializable {
 
     @Override
     public String toString() {
-        return "br.upf.biblioteca.entity.Autor[ cdAutor=" + cdAutor + " ]";
+        return nmNome;
     }
     
 }

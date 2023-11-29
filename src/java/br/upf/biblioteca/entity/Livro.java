@@ -2,6 +2,7 @@ package br.upf.biblioteca.entity;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -15,6 +16,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -28,67 +31,71 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "livro")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Livro.findAll", query = "SELECT t FROM Livro t"),
-    @NamedQuery(name = "Livro.findByCdLivro", query = "SELECT t FROM Livro t WHERE t.cdLivro = :cdLivro"),
-    @NamedQuery(name = "Livro.findByCdRegistro", query = "SELECT t FROM Livro t WHERE t.cdRegistro = :cdRegistro"),
-    @NamedQuery(name = "Livro.findByNmLivro", query = "SELECT t FROM Livro t WHERE t.nmLivro = :nmLivro"),
-    @NamedQuery(name = "Livro.findByNmEdicao", query = "SELECT t FROM Livro t WHERE t.nmEdicao = :nmEdicao"),
-    @NamedQuery(name = "Livro.findByNmEditora", query = "SELECT t FROM Livro t WHERE t.nmEditora = :nmEditora"),
-    @NamedQuery(name = "Livro.findByNrFaixaEtaria", query = "SELECT t FROM Livro t WHERE t.nrFaixaEtaria = :nrFaixaEtaria"),
-    @NamedQuery(name = "Livro.findByNrCopias", query = "SELECT t FROM Livro t WHERE t.nrCopias = :nrCopias")})
+    @NamedQuery(name = "Livro.findAll", query = "SELECT l FROM Livro l"),
+    @NamedQuery(name = "Livro.findAllOrderByNomeLivro", query = "SELECT l FROM Livro l ORDER BY l.nmLivro"),
+    @NamedQuery(name = "Livro.findByCdLivro", query = "SELECT l FROM Livro l WHERE l.cdLivro = :cdLivro"),
+    @NamedQuery(name = "Livro.findByCdRegistro", query = "SELECT l FROM Livro l WHERE l.cdRegistro = :cdRegistro"),
+    @NamedQuery(name = "Livro.findByNmLivro", query = "SELECT l FROM Livro l WHERE l.nmLivro = :nmLivro"),
+    @NamedQuery(name = "Livro.findByNmEdicao", query = "SELECT l FROM Livro l WHERE l.nmEdicao = :nmEdicao"),
+    @NamedQuery(name = "Livro.findByNmEditora", query = "SELECT l FROM Livro l WHERE l.nmEditora = :nmEditora"),
+    @NamedQuery(name = "Livro.findByNrFaixaEtaria", query = "SELECT l FROM Livro l WHERE l.nrFaixaEtaria = :nrFaixaEtaria"),
+    @NamedQuery(name = "Livro.findByDtLancamento", query = "SELECT l FROM Livro l WHERE l.dtLancamento = :dtLancamento"),
+    @NamedQuery(name = "Livro.findByNrCopias", query = "SELECT l FROM Livro l WHERE l.nrCopias = :nrCopias")})
 public class Livro implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "cd_livro")
     private Integer cdLivro;
-    
+
     @Basic(optional = false)
     @NotNull
     @Column(name = "cd_registro")
     private int cdRegistro;
-    
+
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 250)
     @Column(name = "nm_livro")
     private String nmLivro;
-    
+
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 250)
     @Column(name = "nm_edicao")
     private String nmEdicao;
-    
+
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 250)
     @Column(name = "nm_editora")
     private String nmEditora;
-    
+
     @Column(name = "nr_faixa_etaria")
     private Integer nrFaixaEtaria;
-    
+
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "dt_lancamento")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dtLancamento;
+
     @Basic(optional = false)
     @NotNull
     @Column(name = "nr_copias")
     private int nrCopias;
-    
+
     @JoinColumn(name = "cd_autor", referencedColumnName = "cd_autor")
     @ManyToOne(optional = false)
     private Autor cdAutor;
-    
+
     @JoinColumn(name = "cd_genero", referencedColumnName = "cd_genero")
     @ManyToOne(optional = false)
     private Genero cdGenero;
-    
-    @JoinColumn(name = "cd_usuario", referencedColumnName = "cd_usuario")
-    @ManyToOne(optional = false)
-    private Usuario cdUsuario;
-    
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "cdLivro")
     private Collection<Locacao> locacaoCollection;
 
@@ -180,12 +187,12 @@ public class Livro implements Serializable {
         this.cdGenero = cdGenero;
     }
 
-    public Usuario getCdUsuario() {
-        return cdUsuario;
+    public Date getDtLancamento() {
+        return dtLancamento;
     }
 
-    public void setCdUsuario(Usuario cdUsuario) {
-        this.cdUsuario = cdUsuario;
+    public void setDtLancamento(Date dtLancamento) {
+        this.dtLancamento = dtLancamento;
     }
 
     @XmlTransient
@@ -219,7 +226,7 @@ public class Livro implements Serializable {
 
     @Override
     public String toString() {
-        return "br.upf.biblioteca.entity.Livro[ cdLivro=" + cdLivro + " ]";
+        return nmLivro;
     }
-    
+
 }
