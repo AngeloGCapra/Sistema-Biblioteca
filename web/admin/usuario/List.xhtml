@@ -11,6 +11,7 @@
 
     <ui:define name="content">
         <h:form id="UsuarioListForm">
+            <f:event listener="#{utilPermissao.setTelaPermissaoSessionDiretoria()}" type="preRenderView"/>
             <h:panelGroup id="pngList">
                 <p:breadCrumb id="bdcUsuario" style="text-align: left; margin-bottom: 4px; text-transform: uppercase">
                     <p:menuitem value="#{bundle.Title}"/>
