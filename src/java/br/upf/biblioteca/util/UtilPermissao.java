@@ -30,9 +30,9 @@ public class UtilPermissao implements Serializable {
 
         if (telaPermissao.equals(usuarioLogado.getUsrPermissaoacesso()) // Se a permissão do usuário é a mesma permissão da tela
                 || telaPermissao.equals(PROFESSOR) // Se a tela possui permissão para PROFESSOR (todos usuarios tem permissão para PROFESSOR) 
-                || usuarioLogado.getUsrPermissaoacesso().equals(DIRETORIA) // Ou SE o usuário é administrador(diretoria)
+                || usuarioLogado.getUsrPermissaoacesso().equals(DIRETORIA) // Ou se o usuário é administrador(diretoria)
                 ) {
-            permissaoValida = true; //Se ocorreu a validação com sucesso, muda para mermissão valida.
+            permissaoValida = true; //Se ocorreu a validação com sucesso, muda para permissão valida.
         }
         return permissaoValida;
     }

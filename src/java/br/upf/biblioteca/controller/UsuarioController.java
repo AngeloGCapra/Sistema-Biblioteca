@@ -326,11 +326,13 @@ public class UsuarioController implements Serializable {
 
     public String formatarPermissao(Usuario usuario) {
         String permissaoRetorno = "";
+        
         if (usuario != null && usuario.getUsrPermissaoacesso() != null && !usuario.getUsrPermissaoacesso().isEmpty()) {
             Map<String, String> permissaoMap = new HashMap<>();
             UsuariopermissaoacessoEnumController usuariopermissaoacessoEnumController = new UsuariopermissaoacessoEnumController();
             SelectItem[] listaPermissoes = usuariopermissaoacessoEnumController.getPermissoes();
             List<SelectItem> lista = Arrays.asList(listaPermissoes);
+            
             for (int i = 0; i < lista.size(); i++) {
                 if (usuario.getUsrPermissaoacesso().equals(lista.get(i).getValue().toString())) {
                     permissaoMap.put(lista.get(i).getValue().toString(), lista.get(i).getLabel());

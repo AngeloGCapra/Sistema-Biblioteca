@@ -1,7 +1,6 @@
 package br.upf.biblioteca.service;
 
 import br.upf.biblioteca.entity.Usuario;
-import br.upf.biblioteca.entity.enumeration.UsuariopermissaoacessoEnum;
 import br.upf.biblioteca.util.Criptografia;
 import br.upf.biblioteca.util.Email;
 import br.upf.biblioteca.util.Util;
