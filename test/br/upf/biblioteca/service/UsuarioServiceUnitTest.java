@@ -8,7 +8,7 @@ import org.junit.Test;
  *
  * @author Angelo G. Capra
  */
-public class UsuarioServiceTest extends TestCase {
+public class UsuarioServiceUnitTest extends TestCase {
 
     UsuarioService usuarioService = new UsuarioService();
 
@@ -40,6 +40,5 @@ public class UsuarioServiceTest extends TestCase {
         senhaCriptografada = usuarioService.criptografarValue(senha);
         
         assertNotSame(senha, senhaCriptografada);
-        
     }
 }
